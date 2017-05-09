@@ -1,0 +1,15 @@
+[ds-new-tab]
+
+#   T - ToDo                        #
+#   P - Added something (plus)      #
+#   M - Removed something (minus)   #
+#   R - Refactoring                 #
+#   B - Bug                         #
+#   F - Bug fix                     #
+
+# ToDo
+	00000000 | T | ...
+v0.1.0
+	20170509 | P | Scaffold new development set for current development
+	20170509 | P | Converted old idea to Chrome new tab replacement extension
+	20170509 | P | Started development
