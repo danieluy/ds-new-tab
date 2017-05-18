@@ -4,7 +4,9 @@
   "description": "Chrome's new tab replacement by Daniel Sosa",
   "main": "main.js",
   "scripts": {
-    "start": "webpack --config ./webpack.config.js --watch"
+    "start": "webpack --config ./webpack.config.js --watch",
+    "test": "mocha --timeout 2000",
+    "prestart": "npm test"
   },
   "author": "www.danielsosa.uy/dev",
   "license": "MIT",
@@ -12,6 +14,13 @@
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "mocha": "^3.4.1",
+    "should": "^11.2.1",
     "webpack": "^2.5.1"
+  },
+  "dependencies": {
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
   }
 }

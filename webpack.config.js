@@ -13,18 +13,12 @@ module.exports = {
     loaders: [
       {
         loader: "babel-loader",
-        // Skip any files outside of your project's `src` directory
         include: [
           path.resolve(__dirname, "src"),
         ],
-
-        // Only run `.js` and `.jsx` files through Babel
-        test: /\.js$/,
-
-        // Options to configure babel with
+        test: /\.jsx?$/,
         query: {
-          // plugins: ['transform-runtime'],
-          presets: ['es2015']
+          presets: ['es2015', 'react']
         }
       },
     ]

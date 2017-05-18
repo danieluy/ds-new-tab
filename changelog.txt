@@ -10,6 +10,9 @@
 # ToDo
 	00000000 | T | ...
 v0.1.0
-	20170509 | P | Scaffold new development set for current development
+	20170518 | P | switched to react
+	20170518 | P | bookmarks module ready & tested
+	20170518 | P | storage module ready & tested
+	20170509 | P | New scaffold for new development path
 	20170509 | P | Converted old idea to Chrome new tab replacement extension
 	20170509 | P | Started development
