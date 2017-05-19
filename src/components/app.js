@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import BookmarksProvider from '../bookmarks';
 
+import BookmarksList from './bookmarks-list';
+
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
@@ -46,15 +48,6 @@ class App extends Component {
     console.log('Nothing done!');
   }
   render() {
-    const styles = {
-      chip: {
-        margin: 4,
-      },
-      wrapper: {
-        display: 'flex',
-        flexWrap: 'wrap',
-      },
-    };
     return (
       <MuiThemeProvider>
         <div>
@@ -63,6 +56,8 @@ class App extends Component {
             title="DS Newtab"
             onLeftIconButtonTouchTap={this.toggleDrawer.bind(this)}
           />
+
+          <BookmarksList bookmarks={this.state.bookmarks.bookmarks_bar} />
 
           <Drawer
             docked={false}
@@ -74,12 +69,7 @@ class App extends Component {
             <MenuItem onTouchTap={this.doNothing}>Menu Item 2</MenuItem>
           </Drawer>
 
-          <div>
-            {this.state.bookmarks.bookmarks_bar.map((bookmark, i) => {
-              console.log(bookmark);
-              return <Chip key={i} style={styles.chip}>{bookmark.title ? bookmark.title : bookmark.url}</Chip>
-            })}
-          </div>
+
 
         </div>
       </MuiThemeProvider>
