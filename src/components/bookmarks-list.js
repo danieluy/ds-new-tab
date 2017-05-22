@@ -5,11 +5,17 @@ import { List, ListItem } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import FileFolder from 'material-ui/svg-icons/file/folder';
 import Subheader from 'material-ui/Subheader';
+import SvgIcon from 'material-ui/SvgIcon';
+
+const LinkIcon = (props) => (
+  <SvgIcon {...props}>
+    <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z" />
+  </SvgIcon>
+);
 
 class BookmarksList extends Component {
 
   getBookmarksList(bookmarks) {
-    console.log(bookmarks)
     return bookmarks.map((bookmark, i) => {
       if (bookmark.children)
         return this.getFolder(bookmark, i)
@@ -19,24 +25,20 @@ class BookmarksList extends Component {
   }
 
   getItem(key, item, onTouchTap) {
-    console.log(onTouchTap)
     return <ListItem
       key={key}
+      leftIcon={<LinkIcon style={{ marginRight: 24 }} />}
       primaryText={item.title ? item.title : item.url}
-      secondaryText={item.url}
+      /*secondaryText={item.url}*/
       onTouchTap={onTouchTap}
     />;
-  }
-
-  fetchFavicon(URL) {
-    // `https://www.google.com/s2/favicons?domain=${URL}`
   }
 
   getFolder(folder, i) {
     return (
       <ListItem
         key={i}
-        leftAvatar={<Avatar icon={<FileFolder />} />}
+        leftIcon={<FileFolder />}
         primaryText={folder.title}
         nestedItems={
           folder.children.map((child, j) => {
@@ -45,6 +47,7 @@ class BookmarksList extends Component {
             return this.getItem(i + j + 1, child, this.openURL.bind(this, child.url));
           })
         }
+        nestedListStyle={{ backgroundColor: 'rgba(0,0,0,0.05)' }}
       />
     )
   }
@@ -56,6 +59,7 @@ class BookmarksList extends Component {
   render() {
     return (
       <List style={styles.wrapper}>
+        <Subheader>Bookmarks</Subheader>
         {this.getBookmarksList(this.props.bookmarks)}
         {/*<ListItem
           value={1}
