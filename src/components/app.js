@@ -56,7 +56,9 @@ class App extends Component {
           <AppBar
             title="DS Newtab"
             onLeftIconButtonTouchTap={this.toggleDrawer.bind(this)}
-            style={styles.app_bar}
+            style={styles.app_bar.root}
+            titleStyle={styles.app_bar.title}
+            iconStyleLeft={styles.app_bar.iconLeft}
           />
 
           <Drawer
@@ -72,7 +74,8 @@ class App extends Component {
             <BookmarksList bookmarks={this.state.bookmarks.bookmarks_bar} />
           </div>
 
-          <Wallpaper src={'https://s-media-cache-ak0.pinimg.com/originals/f4/af/0d/f4af0d92a1419be64f4a2ea28952f436.jpg'} />
+          <Wallpaper src={'http://www.planwallpaper.com/static/images/summer-live-wallpaper-full-hd-0b5967-h900.jpg'} />
+          {/*<Wallpaper src={'http://wallpaper-gallery.net/images/white-wallpaper/white-wallpaper-24.jpg'} />*/}
 
         </div>
       </MuiThemeProvider>

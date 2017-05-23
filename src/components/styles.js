@@ -1,6 +1,23 @@
+export const color = {
+  alpha0: 'transparent',
+  black_005: 'rgba(0,0,0,0.05)',
+  black_025: 'rgba(0,0,0,0.25)',
+  black_050: 'rgba(0,0,0,0.5)',
+  white_075: 'rgba(255,255,255,0.75)'
+}
 export const app = {
   app_bar: {
-    position: 'fixed'
+    root: {
+      position: 'fixed',
+      backgroundColor: color.alpha0,
+      boxShadow: 'none'
+    },
+    title:{
+      textShadow: `1px 1px 1px ${color.black_025}`
+    },
+    iconLeft:{
+      filter: `drop-shadow(1px 1px 1px ${color.black_025})`
+    }
   },
   body_wrapper: {
     position: 'fixed',
@@ -16,8 +33,4 @@ export const bookmarks_list = {
     overflow: 'hidden',
     backgroundColor: 'rgba(0,0,0,0.1)'
   }
-}
-export const color = {
-  black_005: 'rgba(0,0,0,0.05)',
-  white_075: 'rgba(255,255,255,0.75)'
 }
