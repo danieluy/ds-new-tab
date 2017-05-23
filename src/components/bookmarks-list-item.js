@@ -40,7 +40,6 @@ class ListItemPlus extends Component {
       <ListItem
         style={{ color: color.white_075 }}
         leftIcon={<LinkIcon style={{ fill: color.white_075 }} />}
-        /*rightIcon={<ActionInfo style={{ fill: color.white_075 }} />}*/
         rightIconButton={rightIconMenu}
         primaryText={this.props.item.title ? this.props.item.title : this.props.item.url}
         onTouchTap={this.props.onTouchTap}

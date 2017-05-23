@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { app as styles } from './styles';
+import { app as styles, bookmarks_wrapper } from './styles';
 
 import BookmarksProvider from '../bookmarks';
 
@@ -66,15 +66,19 @@ class App extends Component {
             width={250}
             open={this.state.drawer_open}
             onRequestChange={(drawer_open) => this.setState({ drawer_open })}>
-            <MenuItem onTouchTap={this.doNothing}>Menu Item 1</MenuItem>
-            <MenuItem onTouchTap={this.doNothing}>Menu Item 2</MenuItem>
+            <MenuItem onTouchTap={this.doNothing}>Menu item that does nothing 1</MenuItem>
+            <MenuItem onTouchTap={this.doNothing}>Menu item that does nothing 2</MenuItem>
           </Drawer>
 
           <div style={styles.body_wrapper}>
-            <BookmarksList bookmarks={this.state.bookmarks.bookmarks_bar} />
+
+            <div style={bookmarks_wrapper}>
+              <BookmarksList bookmarks={this.state.bookmarks.bookmarks_bar} />
+            </div>
+
           </div>
 
-          <Wallpaper src={'http://www.planwallpaper.com/static/images/summer-live-wallpaper-full-hd-0b5967-h900.jpg'} />
+          <Wallpaper src={'http://cdn.wallpapersafari.com/1/42/PcS1bg.jpg'} />
           {/*<Wallpaper src={'http://wallpaper-gallery.net/images/white-wallpaper/white-wallpaper-24.jpg'} />*/}
 
         </div>
