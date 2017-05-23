@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 
+import { app as styles } from './styles';
+
 import BookmarksProvider from '../bookmarks';
 
 import BookmarksList from './bookmarks-list';
+import Wallpaper from './wallpaper';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
-import RaisedButton from 'material-ui/RaisedButton';
-import Chip from 'material-ui/Chip';
 
 
 // Needed for onTouchTap ///////////////////////////////////////////////////////////
@@ -55,21 +56,23 @@ class App extends Component {
           <AppBar
             title="DS Newtab"
             onLeftIconButtonTouchTap={this.toggleDrawer.bind(this)}
+            style={styles.app_bar}
           />
-
-          <BookmarksList bookmarks={this.state.bookmarks.bookmarks_bar} />
 
           <Drawer
             docked={false}
             width={250}
             open={this.state.drawer_open}
-            onRequestChange={(drawer_open) => this.setState({ drawer_open })}
-          >
+            onRequestChange={(drawer_open) => this.setState({ drawer_open })}>
             <MenuItem onTouchTap={this.doNothing}>Menu Item 1</MenuItem>
             <MenuItem onTouchTap={this.doNothing}>Menu Item 2</MenuItem>
           </Drawer>
 
+          <div style={styles.body_wrapper}>
+            <BookmarksList bookmarks={this.state.bookmarks.bookmarks_bar} />
+          </div>
 
+          <Wallpaper src={'https://s-media-cache-ak0.pinimg.com/originals/f4/af/0d/f4af0d92a1419be64f4a2ea28952f436.jpg'} />
 
         </div>
       </MuiThemeProvider>
