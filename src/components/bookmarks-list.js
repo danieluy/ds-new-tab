@@ -6,7 +6,6 @@ import ListItemPlus from './bookmarks-list-item';
 import { List, ListItem } from 'material-ui/List';
 import FileFolder from 'material-ui/svg-icons/file/folder';
 import Subheader from 'material-ui/Subheader';
-import SvgIcon from 'material-ui/SvgIcon';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 
 class BookmarksList extends Component {
@@ -45,7 +44,7 @@ class BookmarksList extends Component {
   render() {
     return (
       <List style={styles.wrapper}>
-        <Subheader style={{ color: color.white_075 }}>Bookmarks</Subheader>
+        <Subheader style={{ color: color.white_075 }}>{this.props.language.bookmarks}</Subheader>
         {this.getBookmarksList(this.props.bookmarks)}
       </List>
     );

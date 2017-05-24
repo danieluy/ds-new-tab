@@ -1,3 +1,5 @@
 module.exports = {
-  main_folder_name: 'DsNewTab'
+  app_name: 'DsNewTab',
+  bookmarks: 'Bookmarks',
+  wallpaper: 'Wallpaper'
 }

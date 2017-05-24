@@ -10,6 +10,7 @@
 # ToDo
 	00000000 | T | ...
 v0.1.0
+	20170524 | P | Added basic functionality
 	20170518 | P | Switched to react
 	20170518 | P | PageTiles module ready & tested
 	20170518 | P | storage module ready & tested

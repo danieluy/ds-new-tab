@@ -3,6 +3,7 @@ export const color = {
   black_005: 'rgba(0,0,0,0.05)',
   black_025: 'rgba(0,0,0,0.25)',
   black_050: 'rgba(0,0,0,0.5)',
+  black_075: 'rgba(0,0,0,0.75)',
   white_075: 'rgba(255,255,255,0.75)',
   white_100: 'rgba(255,255,255,1)'
 }
@@ -17,6 +18,9 @@ export const app = {
     },
     iconLeft: {
       filter: `drop-shadow(1px 1px 1px ${color.black_025})`
+    },
+    drawer_header: {
+      backgroundColor: color.black_025,
     }
   },
   body_wrapper: {

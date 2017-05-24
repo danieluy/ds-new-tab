@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "webpack --config ./webpack.config.js --watch",
+    "dist": "webpack --config ./webpack.config.dist.js",
     "test": "mocha --timeout 2000",
     "prestart": "npm test"
   },
@@ -19,6 +20,7 @@
     "mocha": "^3.4.1",
     "react-tap-event-plugin": "^2.0.1",
     "should": "^11.2.1",
+    "uglifyjs-webpack-plugin": "^0.4.3",
     "webpack": "^2.5.1"
   },
   "dependencies": {
