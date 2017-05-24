@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 
-import { app as styles, bookmarks_wrapper } from './styles';
+import { app as styles, bookmarks_wrapper, color } from './styles';
 
 import BookmarksProvider from '../bookmarks';
+import ImageHandler from '../image-handler';
 
 import BookmarksList from './bookmarks-list';
 import Wallpaper from './wallpaper';
+import WallpaperSettings from './wallpaper-settings';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
@@ -27,7 +29,8 @@ class App extends Component {
         bookmarks_bar: [],
         other_bookmarks: []
       },
-      drawer_open: false
+      drawer_open: false,
+      wallpaper_modal_open: false
     }
   }
   componentWillMount() {
@@ -45,8 +48,10 @@ class App extends Component {
       drawer_open: !this.state.drawer_open
     })
   }
-  doNothing() {
-    console.log('Nothing done!');
+  toggleWallpaperSettings() {
+    this.setState({
+      wallpaper_modal_open: !this.state.wallpaper_modal_open
+    })
   }
   render() {
     return (
@@ -66,8 +71,8 @@ class App extends Component {
             width={250}
             open={this.state.drawer_open}
             onRequestChange={(drawer_open) => this.setState({ drawer_open })}>
-            <MenuItem onTouchTap={this.doNothing}>Menu item that does nothing 1</MenuItem>
-            <MenuItem onTouchTap={this.doNothing}>Menu item that does nothing 2</MenuItem>
+
+            <MenuItem onTouchTap={this.toggleWallpaperSettings.bind(this)}>Wallpaper Settings</MenuItem>
           </Drawer>
 
           <div style={styles.body_wrapper}>
@@ -78,8 +83,18 @@ class App extends Component {
 
           </div>
 
-          <Wallpaper src={'http://cdn.wallpapersafari.com/1/42/PcS1bg.jpg'} />
+          <Wallpaper src={'http://cdn.wallpapersafari.com/1/42/PcS1bg.jpg'}>
+          </Wallpaper>
+          <WallpaperSettings
+            open={this.state.wallpaper_modal_open}
+            actions={{
+              cancel: this.toggleWallpaperSettings.bind(this),
+              submit: this.toggleWallpaperSettings.bind(this)
+            }}
+          />
           {/*<Wallpaper src={'http://wallpaper-gallery.net/images/white-wallpaper/white-wallpaper-24.jpg'} />*/}
+
+
 
         </div>
       </MuiThemeProvider>

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class Wallpaper extends Component {
   render() {
     return (
-      <div className="ACATOY" style={{
+      <div style={{
         backgroundImage: `url("${this.props.src}")`,
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
