@@ -16,7 +16,17 @@ function fetch(key) {
   })
 }
 
+function saveLocalStorage(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+function loadLocalStorage(key) {
+  return JSON.parse(localStorage.getItem(key));
+}
+
 module.exports = {
   save: sync,
-  load: fetch
+  load: fetch,
+  saveLocal: saveLocalStorage,
+  loadLocal: loadLocalStorage
 }

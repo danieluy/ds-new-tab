@@ -16,17 +16,17 @@ import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import Toggle from 'material-ui/Toggle';
-import SvgIcon from 'material-ui/SvgIcon';
 import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 
+import { BookmarkIcon, WallpaperIcon } from '../assets/icons';
+import { DefaultWallpaper } from '../assets/wallpaper-default';
 
 // Needed for onTouchTap ///////////////////////////////////////////////////////////
 // http://stackoverflow.com/a/34015469/988941
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 ////////////////////////////////////////////////////////////////////////////////////
-
 class App extends Component {
   constructor() {
     super();
@@ -37,27 +37,10 @@ class App extends Component {
         other_bookmarks: []
       },
       drawer_open: false,
-      wallpaper_modal_open: false
+      wallpaper_modal_open: false,
+      wallpaper_backgroung_color: '#D7211A'
     }
 
-  }
-  syncStoredState(new_state) {
-    this.setState(new_state, () => {
-      Storage.save('state', {
-        bookmarks_on: this.state.bookmarks_on,
-        wallpaper_on: this.state.wallpaper_on
-      })
-    })
-  }
-  loadStoredState() {
-    Storage.load('state')
-      .then((stored_state) => {
-        console.log('Stored State:', stored_state)
-        this.syncStoredState({
-          bookmarks_on: stored_state.bookmarks_on !== undefined ? stored_state.bookmarks_on : true,
-          wallpaper_on: stored_state.wallpaper_on !== undefined ? stored_state.wallpaper_on : true
-        });
-      })
   }
   componentWillMount() {
     BookmarksProvider.get().then(bookmarks => {
@@ -65,10 +48,29 @@ class App extends Component {
         bookmarks: {
           bookmarks_bar: bookmarks.bookmarks_bar,
           other_bookmarks: bookmarks.other_bookmarks
-        }
+        },
+        wallpaper_src: Storage.loadLocal('wallpaper') || DefaultWallpaper
       })
     })
     this.loadStoredState();
+  }
+  syncStoredState(new_state) {
+    this.setState(new_state, () => {
+      Storage.save('state', {
+        bookmarks_on: this.state.bookmarks_on,
+        wallpaper_on: this.state.wallpaper_on
+      })
+      Storage.saveLocal('wallpaper', this.state.wallpaper_src)
+    })
+  }
+  loadStoredState() {
+    Storage.load('state')
+      .then((stored_state) => {
+        this.syncStoredState({
+          bookmarks_on: stored_state.bookmarks_on !== undefined ? stored_state.bookmarks_on : true,
+          wallpaper_on: stored_state.wallpaper_on !== undefined ? stored_state.wallpaper_on : true
+        });
+      })
   }
   toggleDrawer() {
     this.syncStoredState({
@@ -86,22 +88,12 @@ class App extends Component {
     })
   }
   handleWallpaperSettings(settings) {
-    this.syncStoredState({
-      wallpaper_on: settings.wallpaper_visible
-    })
+    this.syncStoredState(settings);
   }
   render() {
+    if (this.state.wallpaper_src)
+      console.log(this.state.wallpaper_src.slice(0, 50))
     const LNG = this.state.lang;
-    const BookmarkIcon = (props) => (
-      <SvgIcon {...props}>
-        <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z" />
-      </SvgIcon>
-    );
-    const WallpaperIcon = (props) => (
-      <SvgIcon {...props}>
-        <path d="M4 4h7V2H4c-1.1 0-2 .9-2 2v7h2V4zm6 9l-4 5h12l-3-4-2.03 2.71L10 13zm7-4.5c0-.83-.67-1.5-1.5-1.5S14 7.67 14 8.5s.67 1.5 1.5 1.5S17 9.33 17 8.5zM20 2h-7v2h7v7h2V4c0-1.1-.9-2-2-2zm0 18h-7v2h7c1.1 0 2-.9 2-2v-7h-2v7zM4 13H2v7c0 1.1.9 2 2 2h7v-2H4v-7z" />
-      </SvgIcon>
-    );
     return (
       <MuiThemeProvider>
         <div>
@@ -152,12 +144,14 @@ class App extends Component {
             status={{
               visible: this.state.wallpaper_on
             }}
-            src={'http://cdn.wallpapersafari.com/1/42/PcS1bg.jpg'}
+            src={this.state.wallpaper_src}
+            color={this.state.wallpaper_backgroung_color}
           />
           <WallpaperSettings
             status={{
               open: this.state.wallpaper_modal_open,
-              switch_visible: this.state.wallpaper_on
+              switch_visible: this.state.wallpaper_on,
+              current_wallpaper: this.state.wallpaper_src
             }}
             handleSettings={this.handleWallpaperSettings.bind(this)}
             actions={{
