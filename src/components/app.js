@@ -44,7 +44,8 @@ class App extends Component {
   syncStoredState(new_state) {
     this.setState(new_state, () => {
       Storage.save('state', {
-        bookmarks_open: this.state.bookmarks_open
+        bookmarks_on: this.state.bookmarks_on,
+        wallpaper_on: this.state.wallpaper_on
       })
     })
   }
@@ -53,7 +54,8 @@ class App extends Component {
       .then((stored_state) => {
         console.log('Stored State:', stored_state)
         this.syncStoredState({
-          bookmarks_open: stored_state.bookmarks_open
+          bookmarks_on: stored_state.bookmarks_on !== undefined ? stored_state.bookmarks_on : true,
+          wallpaper_on: stored_state.wallpaper_on !== undefined ? stored_state.wallpaper_on : true
         });
       })
   }
@@ -80,7 +82,12 @@ class App extends Component {
   }
   toggleBookmarks(evt, toggled) {
     this.syncStoredState({
-      bookmarks_open: toggled
+      bookmarks_on: toggled
+    })
+  }
+  handleWallpaperSettings(settings) {
+    this.syncStoredState({
+      wallpaper_on: settings.wallpaper_visible
     })
   }
   render() {
@@ -118,12 +125,12 @@ class App extends Component {
               onLeftIconButtonTouchTap={this.toggleDrawer.bind(this)}
               style={styles.app_bar.drawer_header}
             />
-            <MenuItem disabled={true} leftIcon={<WallpaperIcon />} onTouchTap={this.toggleWallpaperSettings.bind(this)}>{LNG.wallpaper}</MenuItem>
+            <MenuItem /*disabled={true}*/ leftIcon={<WallpaperIcon />} onTouchTap={this.toggleWallpaperSettings.bind(this)}>{LNG.wallpaper}</MenuItem>
             <MenuItem leftIcon={<BookmarkIcon />}>
               <div style={{ height: '48px', display: 'flex', alignItems: 'center' }}>
                 <Toggle
                   label={LNG.bookmarks}
-                  defaultToggled={this.state.bookmarks_open}
+                  defaultToggled={this.state.bookmarks_on}
                   onToggle={this.toggleBookmarks.bind(this)}
                 />
               </div>
@@ -132,7 +139,7 @@ class App extends Component {
 
           <div style={styles.body_wrapper}>
 
-            {this.state.bookmarks_open ?
+            {this.state.bookmarks_on ?
               <div style={bookmarks_wrapper}>
                 <BookmarksList language={LNG} bookmarks={this.state.bookmarks.bookmarks_bar} />
               </div>
@@ -141,16 +148,22 @@ class App extends Component {
 
           </div>
 
-          <Wallpaper src={'http://cdn.wallpapersafari.com/1/42/PcS1bg.jpg'}>
-          </Wallpaper>
+          <Wallpaper
+            status={{
+              visible: this.state.wallpaper_on
+            }}
+            src={'http://cdn.wallpapersafari.com/1/42/PcS1bg.jpg'}
+          />
           <WallpaperSettings
-            open={this.state.wallpaper_modal_open}
+            status={{
+              open: this.state.wallpaper_modal_open,
+              switch_visible: this.state.wallpaper_on
+            }}
+            handleSettings={this.handleWallpaperSettings.bind(this)}
             actions={{
-              cancel: this.toggleWallpaperSettings.bind(this),
-              submit: this.toggleWallpaperSettings.bind(this)
+              ok: this.toggleWallpaperSettings.bind(this)
             }}
           />
-          {/*<Wallpaper src={'http://wallpaper-gallery.net/images/white-wallpaper/white-wallpaper-24.jpg'} />*/}
 
 
 
