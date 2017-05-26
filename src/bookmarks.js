@@ -11,6 +11,31 @@ function getBookmarks() {
   })
 }
 
+function deleteBookmark(id, cb) {
+  return new Promise((resolve, reject) => {
+    chrome.bookmarks.get(id, (bookmark) => {
+      if (bookmark.children)
+        chrome.bookmarks.removeTree(id, () => {
+          resolve();
+        })
+      else
+        chrome.bookmarks.remove(id, () => {
+          resolve();
+        })
+    })
+  })
+}
+
+function onChange(cb){
+  chrome.bookmarks.onCreated.addListener(cb);
+  chrome.bookmarks.onRemoved.addListener(cb);
+  chrome.bookmarks.onChanged.addListener(cb);
+  chrome.bookmarks.onMoved.addListener(cb);
+  chrome.bookmarks.onChildrenReordered.addListener(cb);
+}
+
 module.exports = {
-  get: getBookmarks
+  get: getBookmarks,
+  delete: deleteBookmark,
+  onChange: onChange
 }

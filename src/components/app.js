@@ -19,7 +19,7 @@ import Toggle from 'material-ui/Toggle';
 import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 
-import { BookmarkIcon, WallpaperIcon } from '../assets/icons';
+import { Bookmark, Wallpaper as WallpaperIcon } from '../assets/icons';
 import { DefaultWallpaper } from '../assets/wallpaper-default';
 
 // Needed for onTouchTap ///////////////////////////////////////////////////////////
@@ -43,6 +43,11 @@ class App extends Component {
 
   }
   componentWillMount() {
+    this.updateBookmarks();
+    BookmarksProvider.onChange(this.updateBookmarks.bind(this));
+    this.loadStoredState();
+  }
+  updateBookmarks() {
     BookmarksProvider.get().then(bookmarks => {
       this.syncStoredState({
         bookmarks: {
@@ -52,7 +57,6 @@ class App extends Component {
         wallpaper_src: Storage.loadLocal('wallpaper') || DefaultWallpaper
       })
     })
-    this.loadStoredState();
   }
   syncStoredState(new_state) {
     this.setState(new_state, () => {
@@ -67,8 +71,8 @@ class App extends Component {
     Storage.load('state')
       .then((stored_state) => {
         this.syncStoredState({
-          bookmarks_on: stored_state.bookmarks_on !== undefined ? stored_state.bookmarks_on : true,
-          wallpaper_on: stored_state.wallpaper_on !== undefined ? stored_state.wallpaper_on : true
+          bookmarks_on: stored_state && stored_state.bookmarks_on !== undefined ? stored_state.bookmarks_on : false,
+          wallpaper_on: stored_state && stored_state.wallpaper_on !== undefined ? stored_state.wallpaper_on : true
         });
       })
   }
@@ -116,7 +120,7 @@ class App extends Component {
               style={styles.app_bar.drawer_header}
             />
             <MenuItem /*disabled={true}*/ leftIcon={<WallpaperIcon />} onTouchTap={this.toggleWallpaperSettings.bind(this)}>{LNG.wallpaper}</MenuItem>
-            <MenuItem leftIcon={<BookmarkIcon />}>
+            <MenuItem leftIcon={<Bookmark />}>
               <div style={{ height: '48px', display: 'flex', alignItems: 'center' }}>
                 <Toggle
                   label={LNG.bookmarks}
@@ -131,7 +135,9 @@ class App extends Component {
 
             {this.state.bookmarks_on ?
               <div style={bookmarks_wrapper}>
-                <BookmarksList language={LNG} bookmarks={this.state.bookmarks.bookmarks_bar} />
+                <BookmarksList language={LNG} bookmarks={this.state.bookmarks.bookmarks_bar} actions={{
+                  delete: BookmarksProvider.delete
+                }} />
               </div>
               : null
             }
@@ -156,9 +162,6 @@ class App extends Component {
               open: this.toggleWallpaperSettings.bind(this)
             }}
           />
-
-
-
         </div>
       </MuiThemeProvider >
     );
