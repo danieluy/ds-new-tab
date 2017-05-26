@@ -16,7 +16,7 @@ function fetch(key) {
   })
 }
 
-function saveLocalStorage(key, data) {
+function saveLocalStorage(key, data) {// throws local storage exceptions
   localStorage.setItem(key, JSON.stringify(data));
 }
 

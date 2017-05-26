@@ -91,8 +91,6 @@ class App extends Component {
     this.syncStoredState(settings);
   }
   render() {
-    if (this.state.wallpaper_src)
-      console.log(this.state.wallpaper_src.slice(0, 50))
     const LNG = this.state.lang;
     return (
       <MuiThemeProvider>
@@ -155,7 +153,7 @@ class App extends Component {
             }}
             handleSettings={this.handleWallpaperSettings.bind(this)}
             actions={{
-              ok: this.toggleWallpaperSettings.bind(this)
+              open: this.toggleWallpaperSettings.bind(this)
             }}
           />
 

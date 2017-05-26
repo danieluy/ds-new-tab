@@ -6,6 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Toggle from 'material-ui/Toggle';
 import Divider from 'material-ui/Divider';
 import TextField from 'material-ui/TextField';
+import CircularProgress from 'material-ui/CircularProgress';
 import { Card, CardHeader, CardMedia } from 'material-ui/Card';
 
 import { Download, Upload } from '../assets/icons';
@@ -16,7 +17,12 @@ class WallpaperSettings extends Component {
     super();
     this.state = {
       download_dialog_open: false,
-      download_url: ''
+      download_url: '',
+      download_progress: false,
+      alert: {
+        open: false,
+        message: ''
+      }
     }
   }
 
@@ -27,7 +33,7 @@ class WallpaperSettings extends Component {
   }
 
   loadFile(evt) {
-    const input = document.getElementById('input-file-wallpaper').click();
+    document.getElementById('input-file-wallpaper').click();
   }
 
   handleImageUpload(props, evt) {
@@ -35,9 +41,7 @@ class WallpaperSettings extends Component {
     const fileReader = new FileReader();
     fileReader.readAsDataURL(file);
     fileReader.onload = (evt) => {
-      props.handleSettings({
-        wallpaper_src: evt.target.result
-      });
+      this.storeNewWallpaper(props, evt.target.result);
     };
   }
 
@@ -49,14 +53,44 @@ class WallpaperSettings extends Component {
         const fileReader = new FileReader();
         fileReader.readAsDataURL(xhr.response);
         fileReader.onload = (evt) => {
-          props.handleSettings({
-            wallpaper_src: evt.target.result
-          });
+          this.donwloadEnded();
+          this.storeNewWallpaper(props, evt.target.result);
         };
       }
     }
     xhr.open('GET', this.state.download_url, true);
     xhr.send();
+    this.toggleDownloadDialogOpen();
+    this.donwloadStarted();
+  }
+
+  storeNewWallpaper(props, wallpaper) {
+    const current_wallpaper = props.status.current_wallpaper;
+    try {
+      props.handleSettings({
+        wallpaper_src: wallpaper
+      });
+    } catch (err) {
+      props.handleSettings({
+        wallpaper_src: current_wallpaper
+      });
+      if (err.code === 22)
+        this.alert('This image is too big to be stored in the browser. However you may choose another wallpaper :)');
+      else
+        this.alert('Something went wrong, please try again or choose another wallpaper');
+    }
+  }
+
+  donwloadStarted(){
+    this.setState({
+      download_progress: true
+    })
+  }
+
+  donwloadEnded(){
+    this.setState({
+      download_progress: false
+    })
   }
 
   toggleDownloadDialogOpen() {
@@ -71,20 +105,32 @@ class WallpaperSettings extends Component {
     });
   }
 
+  handleAlertClose() {
+    this.setState({
+      alert: {
+        open: false,
+        message: ''
+      }
+    })
+  }
+
+  alert(message) {
+    this.setState({
+      alert: {
+        open: true,
+        message: message
+      }
+    })
+  }
+
   render() {
-    const actions = [
-      <RaisedButton
-        label="Cerrar"
-        primary={true}
-        onTouchTap={this.props.actions.ok}
-      />,
-    ];
     return (
       <Dialog
         title="Wallpaper Settings"
-        actions={actions}
-        modal={true}
         open={this.props.status.open}
+        modal={false}
+        onRequestClose={this.props.actions.open}
+        autoScrollBodyContent={true}
       >
 
         <div style={{ height: '48px', display: 'flex', alignItems: 'center' }}>
@@ -102,7 +148,7 @@ class WallpaperSettings extends Component {
         <Card>
           <CardHeader
             title="Current Wallpaper"
-            subtitle="Subtitle"
+            subtitle="Enable, disable or change your wallpaper"
           />
           <CardMedia>
             <img src={this.props.status.current_wallpaper} />
@@ -116,6 +162,7 @@ class WallpaperSettings extends Component {
 
         <div style={{ height: '48px', display: 'flex', alignItems: 'center' }}>
           <RaisedButton icon={<Download />} label="Download from web" onTouchTap={this.toggleDownloadDialogOpen.bind(this)} />
+          {this.state.download_progress ? <CircularProgress style={{ marginLeft: '20px' }} /> : null}
         </div>
 
         <Dialog
@@ -137,6 +184,14 @@ class WallpaperSettings extends Component {
             onChange={this.handleURLInputChange.bind(this)}
             fullWidth={true}
           />
+        </Dialog>
+
+        <Dialog
+          modal={false}
+          open={this.state.alert.open}
+          onRequestClose={this.handleAlertClose.bind(this)}
+        >
+          {this.state.alert.message}
         </Dialog>
 
       </Dialog>
