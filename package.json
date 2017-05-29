@@ -1,6 +1,5 @@
 {
   "name": "ds-new-tab",
-  "version": "0.1.0",
   "description": "Chrome's new tab replacement by Daniel Sosa",
   "main": "main.js",
   "scripts": {

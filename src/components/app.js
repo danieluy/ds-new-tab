@@ -10,6 +10,7 @@ import ImageHandler from '../image-handler';
 import BookmarksList from './bookmarks-list';
 import Wallpaper from './wallpaper';
 import WallpaperSettings from './wallpaper-settings';
+import AboutPanel from './about-panel';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
@@ -19,7 +20,7 @@ import Toggle from 'material-ui/Toggle';
 import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 
-import { Bookmark, Wallpaper as WallpaperIcon } from '../assets/icons';
+import { Bookmark, Wallpaper as WallpaperIcon, About } from '../assets/icons';
 import { DefaultWallpaper } from '../assets/wallpaper-default';
 
 // Needed for onTouchTap ///////////////////////////////////////////////////////////
@@ -38,7 +39,8 @@ class App extends Component {
       },
       drawer_open: false,
       wallpaper_modal_open: false,
-      wallpaper_backgroung_color: '#D7211A'
+      wallpaper_backgroung_color: '#D7211A',
+      about_panel_modal_open: false
     }
 
   }
@@ -86,6 +88,11 @@ class App extends Component {
       wallpaper_modal_open: !this.state.wallpaper_modal_open
     })
   }
+  toggleAboutPanel() {
+    this.syncStoredState({
+      about_panel_modal_open: !this.state.about_panel_modal_open
+    })
+  }
   toggleBookmarks(evt, toggled) {
     this.syncStoredState({
       bookmarks_on: toggled
@@ -95,13 +102,13 @@ class App extends Component {
     this.syncStoredState(settings);
   }
   render() {
-    const LNG = this.state.lang;
+    const LANG = this.state.lang;
     return (
       <MuiThemeProvider>
         <div>
 
           <AppBar
-            title={LNG.app_name}
+            title={LANG.app_name}
             onLeftIconButtonTouchTap={this.toggleDrawer.bind(this)}
             style={styles.app_bar.root}
             titleStyle={styles.app_bar.title}
@@ -115,20 +122,32 @@ class App extends Component {
             onRequestChange={(drawer_open) => this.syncStoredState({ drawer_open })}>
             <AppBar /*Drawer Header*/
               iconElementLeft={<IconButton><NavigationClose /></IconButton>}
-              title={LNG.app_name}
+              title={LANG.app_name}
               onLeftIconButtonTouchTap={this.toggleDrawer.bind(this)}
               style={styles.app_bar.drawer_header}
             />
-            <MenuItem /*disabled={true}*/ leftIcon={<WallpaperIcon />} onTouchTap={this.toggleWallpaperSettings.bind(this)}>{LNG.wallpaper}</MenuItem>
-            <MenuItem leftIcon={<Bookmark />}>
+
+            <MenuItem
+              leftIcon={<WallpaperIcon />}
+              onTouchTap={this.toggleWallpaperSettings.bind(this)}>{LANG.wallpaper}
+            </MenuItem>
+
+            <MenuItem
+              leftIcon={<Bookmark />}>
               <div style={{ height: '48px', display: 'flex', alignItems: 'center' }}>
                 <Toggle
-                  label={LNG.bookmarks}
+                  label={LANG.bookmarks}
                   defaultToggled={this.state.bookmarks_on}
                   onToggle={this.toggleBookmarks.bind(this)}
                 />
               </div>
             </MenuItem>
+
+            <MenuItem
+              leftIcon={<About />}
+              onTouchTap={this.toggleAboutPanel.bind(this)}>{LANG.about.title}
+            </MenuItem>
+
           </Drawer>
 
           <div style={styles.body_wrapper}>
@@ -136,7 +155,7 @@ class App extends Component {
             {this.state.bookmarks_on ?
               <div style={bookmarks_wrapper}>
                 <BookmarksList
-                  language={LNG}
+                  language={LANG}
                   bookmarks={this.state.bookmarks.bookmarks_bar}
                   actions={{
                     delete: BookmarksProvider.delete
@@ -155,6 +174,7 @@ class App extends Component {
             src={this.state.wallpaper_src}
             color={this.state.wallpaper_backgroung_color}
           />
+
           <WallpaperSettings
             status={{
               open: this.state.wallpaper_modal_open,
@@ -166,6 +186,17 @@ class App extends Component {
               open: this.toggleWallpaperSettings.bind(this)
             }}
           />
+
+          <AboutPanel
+            status={{
+              open: this.state.about_panel_modal_open
+            }}
+            actions={{
+              open: this.toggleAboutPanel.bind(this)
+            }}
+            lang={LANG.about}
+          />
+
         </div>
       </MuiThemeProvider >
     );

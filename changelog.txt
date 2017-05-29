@@ -9,6 +9,8 @@
 
 # ToDo
 	00000000 | T | ...
+v0.3.0
+	20170529 | P | Added about panel
 v0.2.1
 	20170529 | F | Bookmarks folder delete function solved. It now checkes against .dateGroupModified instead of .children.
 v0.2.0
