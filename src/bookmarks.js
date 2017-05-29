@@ -11,10 +11,10 @@ function getBookmarks() {
   })
 }
 
-function deleteBookmark(id, cb) {
+function deleteBookmark(id) {
   return new Promise((resolve, reject) => {
     chrome.bookmarks.get(id, (bookmark) => {
-      if (bookmark.children)
+      if (bookmark[0].dateGroupModified)
         chrome.bookmarks.removeTree(id, () => {
           resolve();
         })
@@ -32,6 +32,8 @@ function onChange(cb){
   chrome.bookmarks.onChanged.addListener(cb);
   chrome.bookmarks.onMoved.addListener(cb);
   chrome.bookmarks.onChildrenReordered.addListener(cb);
+  chrome.bookmarks.onImportBegan.addListener(cb);
+  chrome.bookmarks.onImportEnded.addListener(cb);
 }
 
 module.exports = {

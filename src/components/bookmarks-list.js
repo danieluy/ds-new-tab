@@ -79,7 +79,6 @@ class BookmarksList extends Component {
   }
 
   render() {
-    console.log(this.props.bookmarks)
     return (
       <List style={styles.wrapper}>
         <Subheader style={{ color: color.white_075 }}>{this.props.language.bookmarks}</Subheader>

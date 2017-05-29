@@ -9,6 +9,8 @@
 
 # ToDo
 	00000000 | T | ...
+v0.2.1
+	20170529 | F | Bookmarks folder delete function solved. It now checkes against .dateGroupModified instead of .children.
 v0.2.0
 	20170526 | P | Added Bookmarks syncing
 	20170526 | P | Added Bookmarks option delete

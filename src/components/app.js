@@ -135,9 +135,13 @@ class App extends Component {
 
             {this.state.bookmarks_on ?
               <div style={bookmarks_wrapper}>
-                <BookmarksList language={LNG} bookmarks={this.state.bookmarks.bookmarks_bar} actions={{
-                  delete: BookmarksProvider.delete
-                }} />
+                <BookmarksList
+                  language={LNG}
+                  bookmarks={this.state.bookmarks.bookmarks_bar}
+                  actions={{
+                    delete: BookmarksProvider.delete
+                  }}
+                />
               </div>
               : null
             }
