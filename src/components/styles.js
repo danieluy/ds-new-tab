@@ -1,4 +1,6 @@
-export const color = {
+import { blue500 } from 'material-ui/styles/colors';
+
+const color = {
   alpha0: 'transparent',
   black_005: 'rgba(0,0,0,0.05)',
   black_025: 'rgba(0,0,0,0.25)',
@@ -7,7 +9,7 @@ export const color = {
   white_075: 'rgba(255,255,255,0.75)',
   white_100: 'rgba(255,255,255,1)'
 }
-export const app = {
+const app = {
   app_bar: {
     root: {
       position: 'fixed',
@@ -20,7 +22,7 @@ export const app = {
       filter: `drop-shadow(1px 1px 1px ${color.black_025})`
     },
     drawer_header: {
-      backgroundColor: color.black_025,
+      backgroundColor: blue500,
     }
   },
   body_wrapper: {
@@ -31,7 +33,7 @@ export const app = {
     overflow: 'auto'
   }
 }
-export const bookmarks_list = {
+const bookmarks_list = {
   wrapper: {
     width: '100%',
     height: '100%',
@@ -39,10 +41,12 @@ export const bookmarks_list = {
     overflowY: 'auto'
   }
 }
-export const bookmarks_wrapper = {
+const bookmarks_wrapper = {
   position: 'fixed',
   right: '0',
   height: `${window.innerHeight - 64}px`,
   width: '300px',
   top: '64px'
 }
+
+export { color, app, bookmarks_list, bookmarks_wrapper }

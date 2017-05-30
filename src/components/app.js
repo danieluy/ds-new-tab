@@ -13,6 +13,8 @@ import WallpaperSettings from './wallpaper-settings';
 import AboutPanel from './about-panel';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import { blue500 } from 'material-ui/styles/colors';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
@@ -39,7 +41,7 @@ class App extends Component {
       },
       drawer_open: false,
       wallpaper_modal_open: false,
-      wallpaper_backgroung_color: '#D7211A',
+      wallpaper_backgroung_color: blue500,
       about_panel_modal_open: false
     }
 
@@ -103,8 +105,13 @@ class App extends Component {
   }
   render() {
     const LANG = this.state.lang;
+    const muiTheme = getMuiTheme({
+      palette: {
+        primary1Color: blue500
+      }
+    });
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={muiTheme}>
         <div>
 
           <AppBar

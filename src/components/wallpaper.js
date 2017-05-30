@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import Storage from '../storage';
 
+import { blue500 } from 'material-ui/styles/colors';
+
 import { WallpaperIcon } from '../assets/icons';
 
 class Wallpaper extends Component {
@@ -13,7 +15,6 @@ class Wallpaper extends Component {
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
           backgroundSize: 'cover',
-          backgroundColor: '#557a96',
           position: 'fixed',
           width: '100%',
           height: '100vh',
