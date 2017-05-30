@@ -194,7 +194,7 @@ class App extends Component {
             actions={{
               open: this.toggleAboutPanel.bind(this)
             }}
-            lang={LANG.about}
+            lang={LANG}
           />
 
         </div>
