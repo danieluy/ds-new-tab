@@ -80,8 +80,8 @@ class BookmarksList extends Component {
 
   render() {
     return (
-      <List style={styles.wrapper} className="bookmarks-bar custom-scrollbar">
-        <Subheader style={{ color: color.white_075 }}>{this.props.language.bookmarks}</Subheader>
+      <List style={styles.wrapper} className="custom-scrollbar">
+        {/*<Subheader style={{ color: color.white_075 }}>{this.props.language.bookmarks}</Subheader>*/}
         {this.getBookmarksList(this.props.bookmarks)}
       </List>
     );

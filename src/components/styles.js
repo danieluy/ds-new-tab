@@ -43,10 +43,7 @@ const bookmarks_list = {
   }
 }
 const bookmarks_wrapper = {
-  position: 'fixed',
-  right: '0',
-  height: `${window.innerHeight - 64}px`,
-  width: '300px',
+  height: `${window.innerHeight - 128}px`,
   top: '64px'
 }
 

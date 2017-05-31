@@ -115,7 +115,7 @@ class App extends Component {
         <div>
 
           <AppBar
-            title={LANG.app_name}
+            /*title={LANG.app_name}*/
             onLeftIconButtonTouchTap={this.toggleDrawer.bind(this)}
             style={styles.app_bar.root}
             titleStyle={styles.app_bar.title}
@@ -160,7 +160,7 @@ class App extends Component {
           <div style={styles.body_wrapper}>
 
             {this.state.bookmarks_on ?
-              <div style={bookmarks_wrapper}>
+              <div style={bookmarks_wrapper} className="bookmarks-bar">
                 <BookmarksList
                   language={LANG}
                   bookmarks={this.state.bookmarks.bookmarks_bar}

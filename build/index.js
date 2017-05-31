@@ -5366,10 +5366,7 @@ var bookmarks_list = {
   }
 };
 var bookmarks_wrapper = {
-  position: 'fixed',
-  right: '0',
-  height: window.innerHeight - 64 + 'px',
-  width: '300px',
+  height: window.innerHeight - 128 + 'px',
   top: '64px'
 };
 
@@ -18149,10 +18146,10 @@ var App = function (_Component) {
         _react2.default.createElement(
           'div',
           null,
-          _react2.default.createElement(_AppBar2.default /*Drawer Header*/
-          , {
-            title: LANG.app_name,
-            onLeftIconButtonTouchTap: this.toggleDrawer.bind(this),
+          _react2.default.createElement(_AppBar2.default
+          /*title={LANG.app_name}*/
+          /*Drawer Header*/
+          , { onLeftIconButtonTouchTap: this.toggleDrawer.bind(this),
             style: _styles.app.app_bar.root,
             titleStyle: _styles.app.app_bar.title,
             iconStyleLeft: _styles.app.app_bar.iconLeft
@@ -18209,7 +18206,7 @@ var App = function (_Component) {
             { style: _styles.app.body_wrapper },
             this.state.bookmarks_on ? _react2.default.createElement(
               'div',
-              { style: _styles.bookmarks_wrapper },
+              { style: _styles.bookmarks_wrapper, className: 'bookmarks-bar' },
               _react2.default.createElement(_bookmarksList2.default, {
                 language: LANG,
                 bookmarks: this.state.bookmarks.bookmarks_bar,
@@ -18749,12 +18746,7 @@ var BookmarksList = function (_Component) {
     value: function render() {
       return _react2.default.createElement(
         _List.List,
-        { style: _styles.bookmarks_list.wrapper, className: 'bookmarks-bar custom-scrollbar' },
-        _react2.default.createElement(
-          _Subheader2.default,
-          { style: { color: _styles.color.white_075 } },
-          this.props.language.bookmarks
-        ),
+        { style: _styles.bookmarks_list.wrapper, className: 'custom-scrollbar' },
         this.getBookmarksList(this.props.bookmarks)
       );
     }

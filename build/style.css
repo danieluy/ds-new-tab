@@ -13,17 +13,25 @@ div.custom-scrollbar::-webkit-scrollbar {
 }
 
 div.custom-scrollbar::-webkit-scrollbar-track {
+  border-radius: 3px;
   background-color: rgba(255, 255, 255, 0.25);
 }
 
 div.custom-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 3px;
   background-color: rgba(255, 255, 255, 0.5);
 }
 
 .bookmarks-bar{
+  position: fixed;
+  right: -440px;
   background-color: transparent;
-  transition: background-color 500ms;
+  transition: all 500ms;
+  border-radius: 3px;
+  width: 500px;
 }
 .bookmarks-bar:hover{
-  background-color: rgba(0, 0, 0, 0.35);
+  right: 20px;
+  background-color: rgba(128, 128, 128, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
