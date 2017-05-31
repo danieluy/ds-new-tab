@@ -16,7 +16,7 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "css": ["reset.css", "styles.css", "roboto.css"],
+      "css": ["reset.css", "roboto.css", "style.css"],
       "js": ["main.js"]
     }
   ],

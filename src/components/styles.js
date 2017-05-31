@@ -13,7 +13,8 @@ const app = {
   app_bar: {
     root: {
       position: 'fixed',
-      backgroundColor: color.alpha0
+      backgroundColor: color.alpha0,
+      boxShadow: 'none'
     },
     title: {
       textShadow: `1px 1px 1px ${color.black_025}`

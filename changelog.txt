@@ -10,6 +10,8 @@
 # ToDo
 	00000000 | T | ...
 v0.3.0
+	20170531 | P | Improved scrollbar appearance
+	20170531 | F | Solved a Chrome bug that leaks styles, using more specific CSS selectors (workaround: ::-webkit-scrollbar -> div.custom-scrollbar::-webkit-scrollbar)
 	20170530 | P | New primary color blue500
 	20170530 | P | Added new info to about panel
 	20170529 | P | Added about panel
