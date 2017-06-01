@@ -43,7 +43,7 @@ class App extends Component {
       },
       drawer_open: false,
       wallpaper_modal_open: false,
-      wallpaper_backgroung_color: blue500,
+      wallpaper_backgroung_color: '#ffffff',
       about_panel_modal_open: false
     }
 

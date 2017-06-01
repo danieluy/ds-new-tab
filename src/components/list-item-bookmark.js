@@ -20,26 +20,38 @@ class ListItemBookmark extends Component {
 
   getFavicon(URL) {
     const parsed = url.parse(URL);
+    const styles = {
+      container: {
+        height: '56px',
+        paddingTop: '11px',
+        paddingLeft: '3px'
+      },
+      favicon: {
+        fill: color.white_075,
+        width: '18px',
+        height: '18px'
+      }
+    }
     if (parsed.hostname === 'bookmarks')
       return (
-        <div style={{ height: '56px', paddingTop: '10px' }}>
-          <Bookmark style={{ fill: color.white_075, width: '18px', height: '18px' }} />
+        <div style={styles.container}>
+          <Bookmark style={styles.favicon} />
         </div>
       )
     if (parsed.hostname === 'extensions')
       return (
-        <div style={{ height: '56px', paddingTop: '10px' }}>
-          <Extension style={{ fill: color.white_075, width: '18px', height: '18px' }} />
+        <div style={styles.container}>
+          <Extension style={styles.favicon} />
         </div>
       )
     if (parsed.hostname === 'settings')
       return (
-        <div style={{ height: '56px', paddingTop: '10px' }}>
-          <Settings style={{ fill: color.white_075, width: '18px', height: '18px' }} />
+        <div style={styles.container}>
+          <Settings style={styles.favicon} />
         </div>
       )
     return (
-      <div style={{ height: '56px', paddingTop: '10px' }}>
+      <div style={styles.container}>
         <img src={`http://s2.googleusercontent.com/s2/favicons?domain_url=${`${parsed.protocol}//${parsed.hostname}`}`} />
       </div>
     )

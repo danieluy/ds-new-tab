@@ -10,6 +10,7 @@
 # ToDo
 	00000000 | T | ...
 v0.3.0
+	20170601 | P | Minor UI improvements
 	20170601 | P | Added History provider
 	20170531 | P | New bookmark bar behaviour as drawer
 	20170531 | P | Improved scrollbar appearance
