@@ -17,12 +17,13 @@
     {
       "matches": ["http://*/*", "https://*/*"],
       "css": ["reset.css", "roboto.css", "style.css"],
-      "js": ["main.js"]
+      "js": ["index.js"]
     }
   ],
   "permissions": [
     "storage",
     "bookmarks",
-    "tabs"
+    "tabs",
+    "history"
   ]
 }

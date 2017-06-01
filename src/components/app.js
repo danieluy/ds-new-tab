@@ -5,6 +5,7 @@ import { app as styles, bookmarks_wrapper, color } from './styles';
 import Lang from '../assets/lang';
 import Storage from '../storage';
 import BookmarksProvider from '../bookmarks';
+import HistoryProvider from '../history';
 import ImageHandler from '../image-handler';
 
 import BookmarksList from './bookmarks-list';
@@ -24,6 +25,7 @@ import NavigationClose from 'material-ui/svg-icons/navigation/close';
 
 import { Bookmark, Wallpaper as WallpaperIcon, About } from '../assets/icons';
 import { DefaultWallpaper } from '../assets/wallpaper-default';
+
 
 // Needed for onTouchTap ///////////////////////////////////////////////////////////
 // http://stackoverflow.com/a/34015469/988941
