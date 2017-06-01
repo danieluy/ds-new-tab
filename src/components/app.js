@@ -26,6 +26,11 @@ import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import { Bookmark, Wallpaper as WallpaperIcon, About } from '../assets/icons';
 import { DefaultWallpaper } from '../assets/wallpaper-default';
 
+setTimeout(function () {
+  HistoryProvider.getAll()
+    .then(history => console.log(history))
+}, 2000);
+
 
 // Needed for onTouchTap ///////////////////////////////////////////////////////////
 // http://stackoverflow.com/a/34015469/988941
