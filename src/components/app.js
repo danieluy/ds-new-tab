@@ -10,6 +10,7 @@ import ImageHandler from '../image-handler';
 
 import BookmarksList from './bookmarks-list';
 import Wallpaper from './wallpaper';
+import History from './history';
 import WallpaperSettings from './wallpaper-settings';
 import AboutPanel from './about-panel';
 
@@ -26,11 +27,6 @@ import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import { Bookmark, Wallpaper as WallpaperIcon, About } from '../assets/icons';
 import { DefaultWallpaper } from '../assets/wallpaper-default';
 
-setTimeout(function () {
-  HistoryProvider.getAll()
-    .then(history => console.log(history))
-}, 2000);
-
 
 // Needed for onTouchTap ///////////////////////////////////////////////////////////
 // http://stackoverflow.com/a/34015469/988941
@@ -46,6 +42,7 @@ class App extends Component {
         bookmarks_bar: [],
         other_bookmarks: []
       },
+      history: [],
       drawer_open: false,
       wallpaper_modal_open: false,
       wallpaper_backgroung_color: '#ffffff',
@@ -55,19 +52,29 @@ class App extends Component {
   }
   componentWillMount() {
     this.updateBookmarks();
+    this.updateHistory();
     BookmarksProvider.onChange(this.updateBookmarks.bind(this));
     this.loadStoredState();
   }
   updateBookmarks() {
-    BookmarksProvider.get().then(bookmarks => {
-      this.syncStoredState({
-        bookmarks: {
-          bookmarks_bar: bookmarks.bookmarks_bar,
-          other_bookmarks: bookmarks.other_bookmarks
-        },
-        wallpaper_src: Storage.loadLocal('wallpaper') || DefaultWallpaper
+    BookmarksProvider.get()
+      .then(bookmarks => {
+        this.syncStoredState({
+          bookmarks: {
+            bookmarks_bar: bookmarks.bookmarks_bar,
+            other_bookmarks: bookmarks.other_bookmarks
+          },
+          wallpaper_src: Storage.loadLocal('wallpaper') || DefaultWallpaper
+        })
       })
-    })
+  }
+  updateHistory() {
+    HistoryProvider.get()
+      .then(history => {
+        this.syncStoredState({
+          history: history
+        })
+      })
   }
   syncStoredState(new_state) {
     this.setState(new_state, () => {
@@ -189,6 +196,10 @@ class App extends Component {
             color={this.state.wallpaper_backgroung_color}
           />
 
+          <History history={this.state.history} />
+
+
+          {/*--  Dialogs  --------------------------------------------------------------------------------------*/}
           <WallpaperSettings
             status={{
               open: this.state.wallpaper_modal_open,
