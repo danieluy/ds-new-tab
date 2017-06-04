@@ -18,9 +18,9 @@ class History extends Component {
 
       <Dialog
         title="History"
-        open={true}
+        open={this.props.status.open}
         modal={false}
-        //onRequestClose={this.props.actions.open}
+        onRequestClose={this.props.actions.open}
         autoScrollBodyContent={true}
         autoDetectWindowHeight={true}
       >

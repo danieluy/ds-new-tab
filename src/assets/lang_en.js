@@ -2,6 +2,7 @@ module.exports = {
   app_name: 'DS NewTab',
   bookmarks: 'Bookmarks',
   wallpaper: 'Wallpaper',
+  history: 'History',
   about: {
     title: 'About',
     subtitle: `Chrome's new tab replacement by Daniel Sosa`,

@@ -24,7 +24,7 @@ import Toggle from 'material-ui/Toggle';
 import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 
-import { Bookmark, Wallpaper as WallpaperIcon, About } from '../assets/icons';
+import { Bookmark, Wallpaper as WallpaperIcon, About, History as HistoryIcon } from '../assets/icons';
 import { DefaultWallpaper } from '../assets/wallpaper-default';
 
 
@@ -46,7 +46,8 @@ class App extends Component {
       drawer_open: false,
       wallpaper_modal_open: false,
       wallpaper_backgroung_color: '#ffffff',
-      about_panel_modal_open: false
+      about_panel_modal_open: false,
+      history_open: false
     }
 
   }
@@ -109,6 +110,11 @@ class App extends Component {
       about_panel_modal_open: !this.state.about_panel_modal_open
     })
   }
+  toggleHisrotyOpen() {
+    this.syncStoredState({
+      history_open: !this.state.history_open
+    })
+  }
   toggleBookmarks(evt, toggled) {
     this.syncStoredState({
       bookmarks_on: toggled
@@ -165,6 +171,11 @@ class App extends Component {
             </MenuItem>
 
             <MenuItem
+              leftIcon={<HistoryIcon />}
+              onTouchTap={this.toggleHisrotyOpen.bind(this)}>{LANG.history}
+            </MenuItem>
+
+            <MenuItem
               leftIcon={<About />}
               onTouchTap={this.toggleAboutPanel.bind(this)}>{LANG.about.title}
             </MenuItem>
@@ -196,7 +207,15 @@ class App extends Component {
             color={this.state.wallpaper_backgroung_color}
           />
 
-          <History history={this.state.history} />
+          <History
+            status={{
+              open: this.state.history_open
+            }}
+            actions={{
+              open: this.toggleHisrotyOpen.bind(this)
+            }}
+            history={this.state.history}
+          />
 
 
           {/*--  Dialogs  --------------------------------------------------------------------------------------*/}
