@@ -37,5 +37,5 @@ function getVisits(url) {
 
 
 module.exports = {
-  get: getHistoryWithVisits
+  get: getHistory
 }
