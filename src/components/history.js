@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 
 const url = require('url');
 
+import { Lock, LockOpen } from '../assets/icons';
+
 import { List, ListItem } from 'material-ui/List';
-import ActionInfo from 'material-ui/svg-icons/action/info';
 import Dialog from 'material-ui/Dialog';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
@@ -67,13 +68,12 @@ class History extends Component {
                   <Divider />
                 </div>
               );
-            const parsed_url = url.parse(item.url)
             return (
               <a key={i} href={item.url} style={{ textDecoration: 'none' }}>
                 <ListItem
-                  primaryText={this.trimStringToFixedLength(item.title) || this.trimStringToFixedLength(parsed_url.host)}
+                  primaryText={this.trimStringToFixedLength(item.title) || this.trimStringToFixedLength(item.url)}
                   secondaryText={item.url}
-                  rightIcon={<ActionInfo style={{ fill: parsed_url.protocol === 'https:' ? '#4CAF50' : '#888888' }} />}
+                  rightIcon={url.parse(item.url).protocol === 'https:' ? <Lock style={{ fill: '#4CAF50' }} /> : <LockOpen />}
                 />
               </a>
             )
