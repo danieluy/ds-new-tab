@@ -13,6 +13,7 @@ import Wallpaper from './wallpaper';
 import History from './history';
 import WallpaperSettings from './wallpaper-settings';
 import AboutPanel from './about-panel';
+import TilesFrame from './tiles-frame';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -33,6 +34,7 @@ import { DefaultWallpaper } from '../assets/wallpaper-default';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 ////////////////////////////////////////////////////////////////////////////////////
+
 class App extends Component {
   constructor() {
     super();
@@ -198,6 +200,8 @@ class App extends Component {
             }
 
           </div>
+
+          {/*<TilesFrame />*/}
 
           <Wallpaper
             status={{

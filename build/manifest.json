@@ -4,22 +4,37 @@
   "description": "Chrome's new tab replacement by Daniel Sosa",
   "version": "0.3.0",
   "icons": {
-    "16" : "icons/16x16.png",
-    "32" : "icons/32x32.png",
-    "48" : "icons/48x48.png",
-    "64" : "icons/64x64.png",
-    "128" : "icons/128x128.png"
+    "16": "icons/16x16.png",
+    "32": "icons/32x32.png",
+    "48": "icons/48x48.png",
+    "64": "icons/64x64.png",
+    "128": "icons/128x128.png"
   },
-  "chrome_url_overrides" : {
+  "chrome_url_overrides": {
     "newtab": "index.html"
   },
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
-      "css": ["reset.css", "roboto.css", "style.css"],
-      "js": ["index.js"]
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "css": [
+        "reset.css",
+        "roboto.css",
+        "style.css"
+      ],
+      "js": [
+        "index.js"
+      ]
     }
   ],
+  "background": {
+    "scripts": [
+      "pages-thumbnails.js"
+    ],
+    "persistent": true
+  },
   "permissions": [
     "storage",
     "bookmarks",

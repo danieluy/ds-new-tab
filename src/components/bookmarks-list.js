@@ -83,7 +83,7 @@ class BookmarksList extends Component {
 
   render() {
     return (
-      <List style={styles.wrapper} className="custom-scrollbar">
+      <List style={styles.wrapper}>
         {this.getBookmarksList(this.props.bookmarks)}
       </List>
     );
