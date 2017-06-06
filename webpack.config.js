@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   entry: {
     index: path.join(__dirname, '/src/index.js'),
-    'pages-thumbnails': path.join(__dirname, '/src/pages-thumbnails.js')
+    'thumbnails-background': path.join(__dirname, '/src/thumbnails-background.js')
   },
   output: {
     filename: '[name].js',

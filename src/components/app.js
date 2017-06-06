@@ -25,9 +25,8 @@ import Toggle from 'material-ui/Toggle';
 import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 
-import { Bookmark, Wallpaper as WallpaperIcon, About, History as HistoryIcon } from '../assets/icons';
+import { Bookmark, Wallpaper as WallpaperIcon, About, History as HistoryIcon, Permissions } from '../assets/icons';
 import { DefaultWallpaper } from '../assets/wallpaper-default';
-
 
 // Needed for onTouchTap ///////////////////////////////////////////////////////////
 // http://stackoverflow.com/a/34015469/988941
@@ -49,7 +48,8 @@ class App extends Component {
       wallpaper_modal_open: false,
       wallpaper_backgroung_color: '#ffffff',
       about_panel_modal_open: false,
-      history_open: false
+      history_open: false,
+      thumbs: []
     }
 
   }
@@ -125,6 +125,16 @@ class App extends Component {
   handleWallpaperSettings(settings) {
     this.syncStoredState(settings);
   }
+  requestAllURLPermission() {
+    // Permissions must be requested from inside a user gesture, like a button's click handler.
+    chrome.permissions.request({ origins: ["<all_urls>"] }, (granted) => {
+      // The callback argument will be true if the user granted the permissions.
+      if (granted)
+        console.log('Permission granted');
+      else
+        console.log('Permission denied');
+    });
+  }
   render() {
     const LANG = this.state.lang;
     const muiTheme = getMuiTheme({
@@ -180,6 +190,11 @@ class App extends Component {
             <MenuItem
               leftIcon={<About />}
               onTouchTap={this.toggleAboutPanel.bind(this)}>{LANG.about.title}
+            </MenuItem>
+
+            <MenuItem
+              leftIcon={<Permissions />}
+              onTouchTap={this.requestAllURLPermission}>{LANG.permissions}
             </MenuItem>
 
           </Drawer>

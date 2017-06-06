@@ -63,28 +63,60 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 83);
+/******/ 	return __webpack_require__(__webpack_require__.s = 217);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 83:
+/***/ 217:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-function createThumbnail() {
-  chrome.tabs.onCreated.addListener(function () {
-    chrome.tabs.query({ highlighted: true }, function (tabs) {
-      chrome.tabs.captureVisibleTab({}, function (img) {
-        return console.log(img);
-      });
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  getTab(tabId).then(function (tab) {
+    return captureVisibleTab();
+  }).then(function (thumb) {
+    save({ tab: tab, thumb: thumb });
+  });
+});
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.getThumbs === "") sendResponse(load());
+});
+
+function captureVisibleTab() {
+  return new Promise(function (resolve, reject) {
+    chrome.tabs.captureVisibleTab({ format: 'jpeg', quality: 10 }, function (img) {
+      resolve(img);
     });
   });
 }
 
-createThumbnail();
+function getTab(tabId) {
+  return new Promise(function (resolve, reject) {
+    chrome.tabs.get(tabId, function (tab) {
+      return resolve(tab);
+    });
+  });
+}
+
+function save(thumbs) {
+  var stored = load();
+  if (Array.prototype.isPrototypeOf(stored)) stored.push(thumbs);else stored = [];
+  localStorage.setItem('dsNewTabThumbs', JSON.stringify(stored));
+}
+
+function load() {
+  var stored = JSON.parse(localStorage.getItem('dsNewTabThumbs'));
+  if (stored.length > 200) reset();
+  return stored;
+}
+
+function reset() {
+  localStorage.setItem('dsNewTabThumbs', JSON.stringify([]));
+}
 
 /***/ })
 

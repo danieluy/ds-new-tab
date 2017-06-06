@@ -31,14 +31,18 @@
   ],
   "background": {
     "scripts": [
-      "pages-thumbnails.js"
+      "thumbnails-background.js"
     ],
-    "persistent": true
+    "persistent": false
   },
   "permissions": [
     "storage",
     "bookmarks",
     "tabs",
-    "history"
+    "history",
+    "unlimitedStorage"
+  ],
+  "optional_permissions": [
+    "<all_urls>"
   ]
 }

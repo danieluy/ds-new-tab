@@ -1,9 +1,10 @@
-# Ds NewTab
+# DS NewTab
 ## Changelog
 ### ToDo
- - ... ...
+ - Thumbnails provider that handles the most visited, and favorite thumbs
+ - Handle the permissions request
 ### v0.3.0
-* 20170606 | P | Started to work on a background service to generate page thumbnails
+* 20170606 | P | Added first version of the thumbnails background service
 * 20170606 | F | Completely stopped the styles leak (new workaround: encapsulate everything on #ds-new-tab)
 * 20170605 | P | Improvements made to History's logic & UI
 * 20170604 | P | Added menu toggle for History

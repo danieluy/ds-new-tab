@@ -3,6 +3,7 @@ module.exports = {
   bookmarks: 'Bookmarks',
   wallpaper: 'Wallpaper',
   history: 'History',
+  permissions: 'Request permission',
   about: {
     title: 'About',
     subtitle: `Chrome's new tab replacement by Daniel Sosa`,
@@ -23,7 +24,7 @@ module.exports = {
       ]
     },
     changelog: {
-      'v0.3.0': 'New about panel',
+      'v0.3.0': 'New About panel',
       'v0.2.1': 'Bug fixes',
       'v0.2.0': 'New functionalities: Wallpaper and synced bookmarks',
       'v0.1.0': 'Alpha1 with basic functionality'
