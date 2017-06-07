@@ -81,13 +81,13 @@ class WallpaperSettings extends Component {
     }
   }
 
-  donwloadStarted(){
+  donwloadStarted() {
     this.setState({
       download_progress: true
     })
   }
 
-  donwloadEnded(){
+  donwloadEnded() {
     this.setState({
       download_progress: false
     })
@@ -140,7 +140,7 @@ class WallpaperSettings extends Component {
         <div style={{ height: '48px', display: 'flex', alignItems: 'center' }}>
           <Toggle
             label="Active"
-            defaultToggled={this.props.status.switch_visible}
+            defaultToggled={this.props.status.main_switch_toggled}
             onToggle={this.toggleVisible.bind(this, this.props)}
           />
         </div>

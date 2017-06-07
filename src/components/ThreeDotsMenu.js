@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { color } from './styles';
+import { color } from '../assets/styles';
 
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';

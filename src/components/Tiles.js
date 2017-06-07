@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-class TilesFrame extends Component {
+class Tiles extends Component {
  render() {
    return (
      <div>
-       TilesFrame Component
+       Tiles Component
      </div>
    );
  }
 }
 
-export default TilesFrame;
+export default Tiles;

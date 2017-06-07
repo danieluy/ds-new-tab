@@ -3,7 +3,9 @@
 ### ToDo
  - Thumbnails provider that handles the most visited, and favorite thumbs
  - Handle the permissions request
+ - Report issue rendering ListItem with secondaryText to Material-UI
 ### v0.3.0
+* 20170607 | R | Refactored lost of stuff
 * 20170606 | P | Added first version of the thumbnails background service
 * 20170606 | F | Completely stopped the styles leak (new workaround: encapsulate everything on #ds-new-tab)
 * 20170605 | P | Improvements made to History's logic & UI

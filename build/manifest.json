@@ -31,7 +31,7 @@
   ],
   "background": {
     "scripts": [
-      "thumbnails-background.js"
+      "ThumbnailsBackgroundService.js"
     ],
     "persistent": false
   },

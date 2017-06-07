@@ -4,7 +4,7 @@ import url from 'url';
 
 import { Bookmark, Extension, Settings, Link } from '../assets/icons';
 
-import { color } from './styles';
+import { color } from '../assets/styles';
 
 import { ListItem } from 'material-ui/List';
 import SvgIcon from 'material-ui/SvgIcon';
@@ -14,7 +14,7 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
-import { ThreeDotsMenu } from './three-dots-menu';
+import { ThreeDotsMenu } from './ThreeDotsMenu';
 
 class ListItemBookmark extends Component {
 

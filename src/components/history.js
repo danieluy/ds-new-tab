@@ -25,6 +25,7 @@ class History extends Component {
   sortAndGroup() {
     if (this.state.sort_criteria === 'date' && this.state.sort_order === 'descendant')
       return this.groupByDate();
+    return this.props.history;
   }
   groupByDate() {
     const group = {};
@@ -48,6 +49,26 @@ class History extends Component {
       return `${str.slice(0, this.state.stringFixedLength)} ... ...`
     return str;
   }
+  renderItems() {
+    return this.sortAndGroup(this.props.history).map((item, i) => {
+      if (item.subheader)
+        return (
+          <div key={i}>
+            <Subheader>{item.subheader}</Subheader>
+            <Divider />
+          </div>
+        );
+      return (
+        <a key={i} href={item.url} style={{ textDecoration: 'none' }}>
+          <ListItem
+            primaryText={this.trimStringToFixedLength(item.title) || this.trimStringToFixedLength(item.url)}
+            //secondaryText={item.url} // TODO findout why secondaryText renders so slowly
+            rightIcon={url.parse(item.url).protocol === 'https:' ? <Lock style={{ fill: '#4CAF50' }} /> : <LockOpen />}
+          />
+        </a>
+      )
+    })
+  }
   render() {
     return (
 
@@ -60,24 +81,7 @@ class History extends Component {
         autoDetectWindowHeight={true}
       >
         <List>
-          {this.sortAndGroup(this.props.history).map((item, i) => {
-            if (item.subheader)
-              return (
-                <div key={i}>
-                  <Subheader>{item.subheader}</Subheader>
-                  <Divider />
-                </div>
-              );
-            return (
-              <a key={i} href={item.url} style={{ textDecoration: 'none' }}>
-                <ListItem
-                  primaryText={this.trimStringToFixedLength(item.title) || this.trimStringToFixedLength(item.url)}
-                  secondaryText={item.url}
-                  rightIcon={url.parse(item.url).protocol === 'https:' ? <Lock style={{ fill: '#4CAF50' }} /> : <LockOpen />}
-                />
-              </a>
-            )
-          })}
+          {this.renderItems.call(this)}
         </List>
       </Dialog>
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Storage from '../storage';
+import Storage from '../providers/StorageProvider';
 
 import { blue500 } from 'material-ui/styles/colors';
 

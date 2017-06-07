@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { bookmarks_list as styles, color } from './styles';
+import { bookmarks_list as styles, color } from '../assets/styles';
 
-import ListItemBookmark from './list-item-bookmark';
-import { ThreeDotsMenu } from './three-dots-menu';
+import ListItemBookmark from './ListItemBookmark';
+import { ThreeDotsMenu } from './ThreeDotsMenu';
 
 import { List, ListItem } from 'material-ui/List';
 import FileFolder from 'material-ui/svg-icons/file/folder';

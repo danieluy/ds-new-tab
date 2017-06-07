@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 
-import { app as styles, bookmarks_wrapper, color } from './styles';
+import { app as styles, bookmarks_wrapper, color } from '../assets/styles';
 
-import Lang from '../assets/lang';
-import Storage from '../storage';
-import BookmarksProvider from '../bookmarks';
-import HistoryProvider from '../history';
-import ImageHandler from '../image-handler';
+import StorageProvider from '../providers/StorageProvider';
+import Language from '../assets/Language';
+import BookmarksProvider from '../providers/BookmarksProvider';
+import HistoryProvider from '../providers/HistoryProvider';
+import ThumbnailsProvider from '../providers/ThumbnailsProvider';
 
-import BookmarksList from './bookmarks-list';
-import Wallpaper from './wallpaper';
-import History from './history';
-import WallpaperSettings from './wallpaper-settings';
-import AboutPanel from './about-panel';
-import TilesFrame from './tiles-frame';
+import BookmarksList from './BookmarksList';
+import Wallpaper from './Wallpaper';
+import History from './History';
+import WallpaperSettingsDialog from './WallpaperSettingsDialog';
+import BookmarksSettingsDialog from './BookmarksSettingsDialog';
+import AboutPanelDialog from './AboutPanelDialog';
+import Tiles from './Tiles';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -24,6 +25,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Toggle from 'material-ui/Toggle';
 import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import Divider from 'material-ui/Divider';
 
 import { Bookmark, Wallpaper as WallpaperIcon, About, History as HistoryIcon, Permissions } from '../assets/icons';
 import { DefaultWallpaper } from '../assets/wallpaper-default';
@@ -38,7 +40,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      lang: Lang.getLang('en'),
+      lang: Language.getLang('en'),
       bookmarks: {
         bookmarks_bar: [],
         other_bookmarks: []
@@ -48,10 +50,9 @@ class App extends Component {
       wallpaper_modal_open: false,
       wallpaper_backgroung_color: '#ffffff',
       about_panel_modal_open: false,
-      history_open: false,
-      thumbs: []
+      bookmarks_modal_open: false,
+      history_open: false
     }
-
   }
   componentWillMount() {
     this.updateBookmarks();
@@ -67,7 +68,7 @@ class App extends Component {
             bookmarks_bar: bookmarks.bookmarks_bar,
             other_bookmarks: bookmarks.other_bookmarks
           },
-          wallpaper_src: Storage.loadLocal('wallpaper') || DefaultWallpaper
+          wallpaper_src: StorageProvider.loadLocal('wallpaper') || DefaultWallpaper
         })
       })
   }
@@ -81,15 +82,15 @@ class App extends Component {
   }
   syncStoredState(new_state) {
     this.setState(new_state, () => {
-      Storage.save('state', {
+      StorageProvider.save('state', {
         bookmarks_on: this.state.bookmarks_on,
         wallpaper_on: this.state.wallpaper_on
       })
-      Storage.saveLocal('wallpaper', this.state.wallpaper_src)
+      StorageProvider.saveLocal('wallpaper', this.state.wallpaper_src)
     })
   }
   loadStoredState() {
-    Storage.load('state')
+    StorageProvider.load('state')
       .then((stored_state) => {
         this.syncStoredState({
           bookmarks_on: stored_state && stored_state.bookmarks_on !== undefined ? stored_state.bookmarks_on : false,
@@ -107,6 +108,11 @@ class App extends Component {
       wallpaper_modal_open: !this.state.wallpaper_modal_open
     })
   }
+  toggleBookmarksSettings() {
+    this.syncStoredState({
+      bookmarks_modal_open: !this.state.bookmarks_modal_open
+    })
+  }
   toggleAboutPanel() {
     this.syncStoredState({
       about_panel_modal_open: !this.state.about_panel_modal_open
@@ -117,14 +123,18 @@ class App extends Component {
       history_open: !this.state.history_open
     })
   }
-  toggleBookmarks(evt, toggled) {
+  toggleBookmarks(evt, toggle) {
     this.syncStoredState({
-      bookmarks_on: toggled
+      bookmarks_on: toggle
     })
   }
   handleWallpaperSettings(settings) {
     this.syncStoredState(settings);
   }
+  handleBookmarksSettings(settings) {
+    this.syncStoredState(settings);
+  }
+  
   requestAllURLPermission() {
     // Permissions must be requested from inside a user gesture, like a button's click handler.
     chrome.permissions.request({ origins: ["<all_urls>"] }, (granted) => {
@@ -147,7 +157,6 @@ class App extends Component {
         <div>
 
           <AppBar
-            /*title={LANG.app_name}*/
             onLeftIconButtonTouchTap={this.toggleDrawer.bind(this)}
             style={styles.app_bar.root}
             titleStyle={styles.app_bar.title}
@@ -173,14 +182,7 @@ class App extends Component {
 
             <MenuItem
               leftIcon={<Bookmark />}
-              onTouchTap={this.toggleBookmarks.bind(this)}
-            >
-              <div style={{ height: '48px', display: 'flex', alignItems: 'center' }}>
-                <Toggle
-                  label={LANG.bookmarks}
-                  onToggle={this.toggleBookmarks.bind(this)}
-                />
-              </div>
+              onTouchTap={this.toggleBookmarksSettings.bind(this)}>{LANG.bookmarks}
             </MenuItem>
 
             <MenuItem
@@ -188,14 +190,16 @@ class App extends Component {
               onTouchTap={this.toggleHisrotyOpen.bind(this)}>{LANG.history}
             </MenuItem>
 
-            <MenuItem
-              leftIcon={<About />}
-              onTouchTap={this.toggleAboutPanel.bind(this)}>{LANG.about.title}
-            </MenuItem>
+            <Divider />
 
             <MenuItem
               leftIcon={<Permissions />}
               onTouchTap={this.requestAllURLPermission}>{LANG.permissions}
+            </MenuItem>
+
+            <MenuItem
+              leftIcon={<About />}
+              onTouchTap={this.toggleAboutPanel.bind(this)}>{LANG.about.title}
             </MenuItem>
 
           </Drawer>
@@ -215,9 +219,10 @@ class App extends Component {
               : null
             }
 
+            {/*<TilesFrame />*/}
+
           </div>
 
-          {/*<TilesFrame />*/}
 
           <Wallpaper
             status={{
@@ -239,10 +244,10 @@ class App extends Component {
 
 
           {/*--  Dialogs  --------------------------------------------------------------------------------------*/}
-          <WallpaperSettings
+          <WallpaperSettingsDialog
             status={{
               open: this.state.wallpaper_modal_open,
-              switch_visible: this.state.wallpaper_on,
+              main_switch_toggled: this.state.wallpaper_on,
               current_wallpaper: this.state.wallpaper_src
             }}
             handleSettings={this.handleWallpaperSettings.bind(this)}
@@ -251,7 +256,19 @@ class App extends Component {
             }}
           />
 
-          <AboutPanel
+          <BookmarksSettingsDialog
+            status={{
+              open: this.state.bookmarks_modal_open,
+              main_switch_toggled: this.state.bookmarks_on,
+              language: this.state.lang
+            }}
+            actions={{
+              open: this.toggleBookmarksSettings.bind(this),
+              handleSettings: this.handleBookmarksSettings.bind(this)
+            }}
+          />
+
+          <AboutPanelDialog
             status={{
               open: this.state.about_panel_modal_open
             }}

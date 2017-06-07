@@ -3,6 +3,7 @@ module.exports = {
   bookmarks: 'Bookmarks',
   wallpaper: 'Wallpaper',
   history: 'History',
+  active: 'Active',
   permissions: 'Enable thumbnails on recent shortcuts',
   about: {
     title: 'About',
