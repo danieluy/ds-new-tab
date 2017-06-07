@@ -156,7 +156,7 @@ class App extends Component {
 
           <Drawer
             docked={false}
-            width={250}
+            width={400}
             open={this.state.drawer_open}
             onRequestChange={(drawer_open) => this.syncStoredState({ drawer_open })}>
             <AppBar /*Drawer Header*/
@@ -172,11 +172,12 @@ class App extends Component {
             </MenuItem>
 
             <MenuItem
-              leftIcon={<Bookmark />}>
+              leftIcon={<Bookmark />}
+              onTouchTap={this.toggleBookmarks.bind(this)}
+            >
               <div style={{ height: '48px', display: 'flex', alignItems: 'center' }}>
                 <Toggle
                   label={LANG.bookmarks}
-                  defaultToggled={this.state.bookmarks_on}
                   onToggle={this.toggleBookmarks.bind(this)}
                 />
               </div>

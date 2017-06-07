@@ -3,7 +3,7 @@ module.exports = {
   bookmarks: 'Bookmarks',
   wallpaper: 'Wallpaper',
   history: 'History',
-  permissions: 'Request permission',
+  permissions: 'Enable thumbnails on recent shortcuts',
   about: {
     title: 'About',
     subtitle: `Chrome's new tab replacement by Daniel Sosa`,
