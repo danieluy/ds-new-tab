@@ -7,7 +7,7 @@ import StorageProvider from '../providers/StorageProvider';
 import Language from '../assets/Language';
 import BookmarksProvider from '../providers/BookmarksProvider';
 import HistoryProvider from '../providers/HistoryProvider';
-import ThumbnailsProvider from '../providers/ThumbnailsProvider';
+import Events from '../providers/EventsProvider';
 
 import BookmarksList from './BookmarksList';
 import MainDrawer from './MainDrawer';
@@ -21,8 +21,6 @@ import AboutPanelDialog from './AboutPanelDialog';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import AppBar from 'material-ui/AppBar';
-
-ThumbnailsProvider.onChange((data) => {console.log(data.message)})
 
 // Needed for onTouchTap ///////////////////////////////////////////////////////////
 // http://stackoverflow.com/a/34015469/988941
@@ -45,7 +43,8 @@ class App extends Component {
       wallpaper_backgroung_color: '#ffffff',
       about_panel_modal_open: false,
       bookmarks_modal_open: false,
-      history_open: false
+      history_open: false,
+      top_visited: []
     }
   }
   componentWillMount() {
@@ -73,14 +72,16 @@ class App extends Component {
           history: history
         })
       })
+    HistoryProvider.getTop()
+      .then(top => { console.log(top) })
   }
   syncStoredState(new_state) {
     this.setState(new_state, () => {
       StorageProvider.save('state', {
         bookmarks_on: this.state.bookmarks_on,
         wallpaper_on: this.state.wallpaper_on
-      })
-      StorageProvider.saveLocal('wallpaper', this.state.wallpaper_src)
+      });
+      StorageProvider.saveLocal('wallpaper', this.state.wallpaper_src);
     })
   }
   loadStoredState() {
@@ -138,6 +139,7 @@ class App extends Component {
     });
   }
   render() {
+    console.log(this.state.top_visited)
     const LANG = this.state.lang;
     return (
       <MuiThemeProvider muiTheme={

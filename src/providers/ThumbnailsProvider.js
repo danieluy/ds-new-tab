@@ -1,24 +1,14 @@
 "use strict";
 
 import HistoryProvider from './HistoryProvider';
-import StorageProvider from './StorageProvider';
+import Events from './EventsProvider';
 
-const listeners = []
+function getThumbnails() {
+  // chrome.runtime.sendMessage({ getThumbs: "simple" }, (thumbs) => {
 
-function init() {
-  chrome.runtime.sendMessage({ getThumbs: "simple" }, (thumbs) => {
-
-  });
-}
-
-function onChange(callback) {
-  listeners.push(callback);
-}
-
-function emit(data) {
-  listeners.forEach(listener => { listener(data) })
+  // });
 }
 
 module.exports = {
-  onChange: onChange
+  get: getThumbnails
 }
