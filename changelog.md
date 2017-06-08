@@ -5,13 +5,16 @@
  - Handle the permissions request
  - Report issue rendering ListItem with secondaryText to Material-UI
 ### v0.3.0
+* 20170601 | P | Added ThumbnailsProvider (work in progress)
+* 20170608 | R | Refactored MainDrawer
+* 20170608 | R | Refactored MainDrawer
 * 20170607 | R | Refactored lost of stuff
 * 20170606 | P | Added first version of the thumbnails background service
 * 20170606 | F | Completely stopped the styles leak (new workaround: encapsulate everything on #ds-new-tab)
 * 20170605 | P | Improvements made to History's logic & UI
 * 20170604 | P | Added menu toggle for History
 * 20170602 | P | Added History list on Dialog, work in progress
-* 20170601 | P | Added some logic to the history provider
+* 20170601 | P | Added some logic to the HistoryProvider
 * 20170601 | P | Minor UI improvements
 * 20170601 | P | Added History provider
 * 20170531 | P | New bookmark bar behaviour as drawer

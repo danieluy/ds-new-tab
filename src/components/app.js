@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { app as styles, bookmarks_wrapper, color } from '../assets/styles';
+import { DefaultWallpaper } from '../assets/wallpaper-default';
 
 import StorageProvider from '../providers/StorageProvider';
 import Language from '../assets/Language';
@@ -9,26 +10,19 @@ import HistoryProvider from '../providers/HistoryProvider';
 import ThumbnailsProvider from '../providers/ThumbnailsProvider';
 
 import BookmarksList from './BookmarksList';
+import MainDrawer from './MainDrawer';
 import Wallpaper from './Wallpaper';
 import History from './History';
 import WallpaperSettingsDialog from './WallpaperSettingsDialog';
 import BookmarksSettingsDialog from './BookmarksSettingsDialog';
 import AboutPanelDialog from './AboutPanelDialog';
-import Tiles from './Tiles';
+// import Tiles from './Tiles';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import { blue500 } from 'material-ui/styles/colors';
 import AppBar from 'material-ui/AppBar';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
-import Toggle from 'material-ui/Toggle';
-import IconButton from 'material-ui/IconButton';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import Divider from 'material-ui/Divider';
 
-import { Bookmark, Wallpaper as WallpaperIcon, About, History as HistoryIcon, Permissions } from '../assets/icons';
-import { DefaultWallpaper } from '../assets/wallpaper-default';
+ThumbnailsProvider.onChange((data) => {console.log(data.message)})
 
 // Needed for onTouchTap ///////////////////////////////////////////////////////////
 // http://stackoverflow.com/a/34015469/988941
@@ -134,11 +128,9 @@ class App extends Component {
   handleBookmarksSettings(settings) {
     this.syncStoredState(settings);
   }
-  
   requestAllURLPermission() {
     // Permissions must be requested from inside a user gesture, like a button's click handler.
     chrome.permissions.request({ origins: ["<all_urls>"] }, (granted) => {
-      // The callback argument will be true if the user granted the permissions.
       if (granted)
         console.log('Permission granted');
       else
@@ -147,14 +139,15 @@ class App extends Component {
   }
   render() {
     const LANG = this.state.lang;
-    const muiTheme = getMuiTheme({
-      palette: {
-        primary1Color: blue500
-      }
-    });
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
-        <div>
+      <MuiThemeProvider muiTheme={
+        getMuiTheme.call(this, {
+          palette: {
+            primary1Color: color.primary
+          }
+        })
+      }>
+        <div /*Single element for MuiThemeProvider*/>
 
           <AppBar
             onLeftIconButtonTouchTap={this.toggleDrawer.bind(this)}
@@ -163,46 +156,35 @@ class App extends Component {
             iconStyleLeft={styles.app_bar.iconLeft}
           />
 
-          <Drawer
-            docked={false}
-            width={400}
-            open={this.state.drawer_open}
-            onRequestChange={(drawer_open) => this.syncStoredState({ drawer_open })}>
-            <AppBar /*Drawer Header*/
-              iconElementLeft={<IconButton><NavigationClose /></IconButton>}
-              title={LANG.app_name}
-              onLeftIconButtonTouchTap={this.toggleDrawer.bind(this)}
-              style={styles.app_bar.drawer_header}
-            />
-
-            <MenuItem
-              leftIcon={<WallpaperIcon />}
-              onTouchTap={this.toggleWallpaperSettings.bind(this)}>{LANG.wallpaper}
-            </MenuItem>
-
-            <MenuItem
-              leftIcon={<Bookmark />}
-              onTouchTap={this.toggleBookmarksSettings.bind(this)}>{LANG.bookmarks}
-            </MenuItem>
-
-            <MenuItem
-              leftIcon={<HistoryIcon />}
-              onTouchTap={this.toggleHisrotyOpen.bind(this)}>{LANG.history}
-            </MenuItem>
-
-            <Divider />
-
-            <MenuItem
-              leftIcon={<Permissions />}
-              onTouchTap={this.requestAllURLPermission}>{LANG.permissions}
-            </MenuItem>
-
-            <MenuItem
-              leftIcon={<About />}
-              onTouchTap={this.toggleAboutPanel.bind(this)}>{LANG.about.title}
-            </MenuItem>
-
-          </Drawer>
+          <MainDrawer
+            status={{
+              open: this.state.drawer_open,
+              language: LANG
+            }}
+            actions={{
+              onRequestChange: this.toggleDrawer.bind(this),
+              app_bar: {
+                onLeftIconButtonTouchTap: this.toggleDrawer.bind(this)
+              },
+              menu_items: {
+                wallpaper: {
+                  onTouchTap: this.toggleWallpaperSettings.bind(this)
+                },
+                bookmarks: {
+                  onTouchTap: this.toggleBookmarksSettings.bind(this)
+                },
+                history: {
+                  onTouchTap: this.toggleHisrotyOpen.bind(this)
+                },
+                permissions: {
+                  onTouchTap: this.requestAllURLPermission
+                },
+                about: {
+                  onTouchTap: this.toggleAboutPanel.bind(this)
+                }
+              }
+            }}
+          />
 
           <div style={styles.body_wrapper}>
 

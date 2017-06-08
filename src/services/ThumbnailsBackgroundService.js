@@ -8,7 +8,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
-    if (request.getThumbs === "")
+    if (request.getThumbs === "simple")
       sendResponse(load());
   }
 );

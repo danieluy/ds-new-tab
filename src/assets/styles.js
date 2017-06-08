@@ -1,4 +1,4 @@
-import { blue500 } from 'material-ui/styles/colors';
+import { blueGrey500 as primary_color } from 'material-ui/styles/colors';
 
 const color = {
   alpha0: 'transparent',
@@ -7,7 +7,8 @@ const color = {
   black_050: 'rgba(0,0,0,0.5)',
   black_075: 'rgba(0,0,0,0.75)',
   white_075: 'rgba(255,255,255,0.75)',
-  white_100: 'rgba(255,255,255,1)'
+  white_100: 'rgba(255,255,255,1)',
+  primary: primary_color
 }
 const app = {
   app_bar: {
@@ -23,7 +24,7 @@ const app = {
       filter: `drop-shadow(1px 1px 1px ${color.black_025})`
     },
     drawer_header: {
-      backgroundColor: blue500,
+      backgroundColor: color.primary,
     }
   },
   body_wrapper: {
