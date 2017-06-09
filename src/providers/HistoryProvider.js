@@ -2,15 +2,30 @@
 
 import Events from './EventsProvider';
 import ThumbnailsProvider from './ThumbnailsProvider';
+import StorageProvider from './StorageProvider';
 
 const MAX_ITEMS_TOP = 10;
 
 chrome.history.onVisited.addListener(updateStored);
 
 function updateStored() {
-  ThumbnailsProvider.get()
-    .then(thumbs => console.log('Thumbs received', thumbs.length));
-  Events.emit('stored_history_updated');
+  Promise.all([
+    getTop(MAX_ITEMS_TOP),
+    ThumbnailsProvider.get()
+  ])
+    .then(top_and_thumbs => {
+      storeTop(mergeHistoryThumbs(top_and_thumbs[0], top_and_thumbs[1]));
+    })
+}
+
+function mergeHistoryThumbs(history, thumbs) {
+  return history.map(item => {
+    item.thumb = null;
+    for (let i = 0; i < thumbs.length && !item.thumb; i++)
+      if (thumbs[i].tab.url === item.url)
+        item.thumb = thumbs[i].thumb;
+    return item;
+  })
 }
 
 function getHistory() {
@@ -66,21 +81,16 @@ function getTop(limit) {
   })
 }
 
-function insertThumbnails() {
-
+function storeTop(top) {
+  StorageProvider.saveLocal('top_visited', top);
+  Events.emit('stored_top_visited_updated');
 }
 
-function getTopWithThumbnails(limit) {
-  return new Promise((resolve, reject) => {
-    getTop(limit)
-      .then(top => {
-        console.log('TODO add the tumbnails to the top visited');
-        resolve(top);
-      })
-  })
+function loadTop() {
+  return StorageProvider.loadLocal('top_visited');
 }
 
 module.exports = {
   get: getHistory,
-  getTopTen: getTopWithThumbnails.bind(this, 10)
+  getTopTen: loadTop
 }

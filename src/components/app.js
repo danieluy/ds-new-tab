@@ -16,7 +16,7 @@ import History from './History';
 import WallpaperSettingsDialog from './WallpaperSettingsDialog';
 import BookmarksSettingsDialog from './BookmarksSettingsDialog';
 import AboutPanelDialog from './AboutPanelDialog';
-// import Tiles from './Tiles';
+import Tiles from './Tiles';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -39,6 +39,7 @@ class App extends Component {
       },
       history: [],
       drawer_open: false,
+      wallpaper_src: null,
       wallpaper_modal_open: false,
       wallpaper_backgroung_color: '#ffffff',
       about_panel_modal_open: false,
@@ -49,9 +50,15 @@ class App extends Component {
   }
   componentWillMount() {
     this.updateBookmarks();
+    this.updateTopVisited();
     this.updateHistory();
     BookmarksProvider.onChange(this.updateBookmarks.bind(this));
     this.loadStoredState();
+  }
+  updateTopVisited() {
+    this.syncStoredState({
+      top_visited: HistoryProvider.getTopTen()
+    })
   }
   updateBookmarks() {
     BookmarksProvider.get()
@@ -72,8 +79,6 @@ class App extends Component {
           history: history
         })
       })
-    HistoryProvider.getTopTen()
-      .then(top => { console.log('top received') })
   }
   syncStoredState(new_state) {
     this.setState(new_state, () => {
@@ -139,7 +144,6 @@ class App extends Component {
     });
   }
   render() {
-    console.log(this.state.top_visited)
     const LANG = this.state.lang;
     return (
       <MuiThemeProvider muiTheme={
@@ -203,7 +207,11 @@ class App extends Component {
               : null
             }
 
-            {/*<TilesFrame />*/}
+            <Tiles
+              status={{
+                tiles: this.state.top_visited
+              }}
+            />
 
           </div>
 

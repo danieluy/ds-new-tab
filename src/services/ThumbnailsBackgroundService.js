@@ -3,7 +3,7 @@
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   getTab(tabId)
     .then(tab => captureVisibleTab())
-    .then(thumb => { save({ tab: tab, thumb: thumb }) })
+    .then(thumb => { save({ tab, thumb }) })
 })
 
 chrome.runtime.onMessage.addListener(

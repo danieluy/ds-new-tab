@@ -5,7 +5,8 @@
  - Handle the permissions request
  - Report issue rendering ListItem with secondaryText to Material-UI
 ### v0.3.0
-* 20170601 | P | Added ThumbnailsProvider (work in progress)
+* 20170609 | P | Added tiles
+* 20170608 | P | Added ThumbnailsProvider
 * 20170608 | R | Refactored MainDrawer
 * 20170608 | R | Refactored MainDrawer
 * 20170607 | R | Refactored lost of stuff
