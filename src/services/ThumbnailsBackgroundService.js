@@ -36,7 +36,7 @@ function save(thumbs) {
 
 function load() {
   const stored = JSON.parse(localStorage.getItem('dsNewTabThumbs'));
-  if (stored.length > 200)
+  if (!stored || stored.length > 200)
     reset();
   return stored;
 }

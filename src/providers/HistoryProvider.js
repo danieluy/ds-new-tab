@@ -3,10 +3,14 @@
 import Events from './EventsProvider';
 import ThumbnailsProvider from './ThumbnailsProvider';
 
-chrome.history.onVisited.addListener(notifyVisited);
+const MAX_ITEMS_TOP = 10;
 
-function notifyVisited() {
-  Events.emit('url_visited')
+chrome.history.onVisited.addListener(updateStored);
+
+function updateStored() {
+  ThumbnailsProvider.get()
+    .then(thumbs => console.log('Thumbs received', thumbs.length));
+  Events.emit('stored_history_updated');
 }
 
 function getHistory() {
@@ -62,11 +66,15 @@ function getTop(limit) {
   })
 }
 
+function insertThumbnails() {
+
+}
+
 function getTopWithThumbnails(limit) {
   return new Promise((resolve, reject) => {
     getTop(limit)
       .then(top => {
-        console.log('TODO add the tumbnails to the top visited', top);
+        console.log('TODO add the tumbnails to the top visited');
         resolve(top);
       })
   })
@@ -74,5 +82,5 @@ function getTopWithThumbnails(limit) {
 
 module.exports = {
   get: getHistory,
-  getTop: getTopWithThumbnails
+  getTopTen: getTopWithThumbnails.bind(this, 10)
 }

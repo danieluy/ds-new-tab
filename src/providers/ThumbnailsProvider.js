@@ -4,9 +4,12 @@ import HistoryProvider from './HistoryProvider';
 import Events from './EventsProvider';
 
 function getThumbnails() {
-  // chrome.runtime.sendMessage({ getThumbs: "simple" }, (thumbs) => {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({ getThumbs: "simple" }, (thumbs) => {
+      resolve(thumbs);
+    });
+  })
 
-  // });
 }
 
 module.exports = {

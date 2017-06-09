@@ -72,8 +72,8 @@ class App extends Component {
           history: history
         })
       })
-    HistoryProvider.getTop()
-      .then(top => { console.log(top) })
+    HistoryProvider.getTopTen()
+      .then(top => { console.log('top received') })
   }
   syncStoredState(new_state) {
     this.setState(new_state, () => {
@@ -88,8 +88,8 @@ class App extends Component {
     StorageProvider.load('state')
       .then((stored_state) => {
         this.syncStoredState({
-          bookmarks_on: stored_state && stored_state.bookmarks_on !== undefined ? stored_state.bookmarks_on : false,
-          wallpaper_on: stored_state && stored_state.wallpaper_on !== undefined ? stored_state.wallpaper_on : true
+          bookmarks_on: (stored_state && stored_state.bookmarks_on !== undefined) ? stored_state.bookmarks_on : true,
+          wallpaper_on: (stored_state && stored_state.wallpaper_on !== undefined) ? stored_state.wallpaper_on : true
         });
       })
   }
