@@ -87,7 +87,7 @@ function storeTop(top) {
 }
 
 function loadTop() {
-  return StorageProvider.loadLocal('top_visited');
+  return StorageProvider.loadLocal('top_visited') || [];
 }
 
 module.exports = {
