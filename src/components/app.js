@@ -41,7 +41,7 @@ class App extends Component {
       drawer_open: false,
       wallpaper_src: null,
       wallpaper_modal_open: false,
-      wallpaper_backgroung_color: '#ffffff',
+      wallpaper_backgroung_color: '#eeeeee',
       about_panel_modal_open: false,
       bookmarks_modal_open: false,
       history_open: false,
@@ -49,11 +49,13 @@ class App extends Component {
     }
   }
   componentWillMount() {
-    this.updateBookmarks();
-    this.updateTopVisited();
-    this.updateHistory();
     BookmarksProvider.onChange(this.updateBookmarks.bind(this));
     this.loadStoredState();
+  }
+  componentDidMount(){
+    this.updateBookmarks();
+    this.updateHistory();
+    this.updateTopVisited();
   }
   updateTopVisited() {
     this.syncStoredState({

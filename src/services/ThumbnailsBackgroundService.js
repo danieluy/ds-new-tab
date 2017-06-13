@@ -1,10 +1,6 @@
 "use strict";
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  getTab(tabId)
-    .then(tab => captureVisibleTab())
-    .then(thumb => { save({ tab, thumb }) })
-})
+chrome.tabs.onUpdated.addListener(mergeTabThumb);
 
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
@@ -13,9 +9,29 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+function mergeTabThumb(tabId, changeInfo, tab) {
+  Promise.all([
+    getTab(tabId),
+    captureVisibleTab()
+  ])
+    .then(tab_thumb => {
+      save({
+        url: tab_thumb[0].url,
+        thumb: tab_thumb[0].thumb
+      })
+    })
+    .catch(err => {
+      console.error(err)
+    })
+}
+
 function captureVisibleTab() {
   return new Promise((resolve, reject) => {
-    chrome.tabs.captureVisibleTab({ format: 'jpeg', quality: 10 }, img => { resolve(img) })
+    try {
+      chrome.tabs.captureVisibleTab({ format: 'jpeg', quality: 10 }, img => { resolve(img) })
+    } catch (err) {
+      reject(err);
+    }
   })
 }
 
@@ -25,22 +41,33 @@ function getTab(tabId) {
   })
 }
 
+let full = false;
+
 function save(thumbs) {
+  console.log('save(thumbs)', (load() ? load().length : ''));
   let stored = load();
   if (Array.prototype.isPrototypeOf(stored))
     stored.push(thumbs);
   else
     stored = [];
-  localStorage.setItem('dsNewTabThumbs', JSON.stringify(stored));
+
+  try {
+    localStorage.setItem('dsNewTabThumbs', JSON.stringify(stored));
+  } catch (err) {
+    full = true;
+    console.error(err);
+  }
 }
 
 function load() {
+  console.log('load()');
   const stored = JSON.parse(localStorage.getItem('dsNewTabThumbs'));
-  if (!stored || stored.length > 200)
+  if (full)
     reset();
   return stored;
 }
 
 function reset() {
-  localStorage.setItem('dsNewTabThumbs', JSON.stringify([]));
+  console.log('reset()');
+  localStorage.removeItem('dsNewTabThumbs');
 }

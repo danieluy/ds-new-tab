@@ -74,23 +74,32 @@
 "use strict";
 
 
-chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-  getTab(tabId).then(function (tab) {
-    return captureVisibleTab();
-  }).then(function (thumb) {
-    save({ tab: tab, thumb: thumb });
-  });
-});
+chrome.tabs.onUpdated.addListener(mergeTabThumb);
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.getThumbs === "simple") sendResponse(load());
 });
 
+function mergeTabThumb(tabId, changeInfo, tab) {
+  Promise.all([getTab(tabId), captureVisibleTab()]).then(function (tab_thumb) {
+    save({
+      url: tab_thumb[0].url,
+      thumb: tab_thumb[0].thumb
+    });
+  }).catch(function (err) {
+    console.error(err);
+  });
+}
+
 function captureVisibleTab() {
   return new Promise(function (resolve, reject) {
-    chrome.tabs.captureVisibleTab({ format: 'jpeg', quality: 10 }, function (img) {
-      resolve(img);
-    });
+    try {
+      chrome.tabs.captureVisibleTab({ format: 'jpeg', quality: 10 }, function (img) {
+        resolve(img);
+      });
+    } catch (err) {
+      reject(err);
+    }
   });
 }
 
@@ -102,20 +111,31 @@ function getTab(tabId) {
   });
 }
 
+var full = false;
+
 function save(thumbs) {
+  console.log('save(thumbs)', load() ? load().length : '');
   var stored = load();
   if (Array.prototype.isPrototypeOf(stored)) stored.push(thumbs);else stored = [];
-  localStorage.setItem('dsNewTabThumbs', JSON.stringify(stored));
+
+  try {
+    localStorage.setItem('dsNewTabThumbs', JSON.stringify(stored));
+  } catch (err) {
+    full = true;
+    console.error(err);
+  }
 }
 
 function load() {
+  console.log('load()');
   var stored = JSON.parse(localStorage.getItem('dsNewTabThumbs'));
-  if (!stored || stored.length > 200) reset();
+  if (full) reset();
   return stored;
 }
 
 function reset() {
-  localStorage.setItem('dsNewTabThumbs', JSON.stringify([]));
+  console.log('reset()');
+  localStorage.removeItem('dsNewTabThumbs');
 }
 
 /***/ })

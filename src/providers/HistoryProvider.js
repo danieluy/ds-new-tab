@@ -22,7 +22,7 @@ function mergeHistoryThumbs(history, thumbs) {
   return history.map(item => {
     item.thumb = null;
     for (let i = 0; i < thumbs.length && !item.thumb; i++)
-      if (thumbs[i].tab.url === item.url)
+      if (thumbs[i].url === item.url)
         item.thumb = thumbs[i].thumb;
     return item;
   })

@@ -4,11 +4,11 @@ import Storage from '../providers/StorageProvider';
 
 import { blue500 } from 'material-ui/styles/colors';
 
-import { WallpaperIcon } from '../assets/icons';
+import { Wallpaper as WallpaperIcon } from '../assets/icons';
 
 class Wallpaper extends Component {
   render() {
-    if (this.props.status.visible && this.props.src)
+    if (this.props.status.visible && this.props.src) {
       return (
         <div style={{
           backgroundImage: `url("${this.props.src}")`,
@@ -21,7 +21,8 @@ class Wallpaper extends Component {
           zIndex: '-1'
         }} />
       );
-    else if (this.props.status.visible)
+    }
+    else if (this.props.status.visible) {
       return (
         <div style={{
           backgroundColor: `${this.props.color}`,
@@ -40,6 +41,7 @@ class Wallpaper extends Component {
           </span>
         </div>
       );
+    }
     return (
       <div style={{
         backgroundColor: `${this.props.color}`,
