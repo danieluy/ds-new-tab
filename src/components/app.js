@@ -52,10 +52,11 @@ class App extends Component {
     BookmarksProvider.onChange(this.updateBookmarks.bind(this));
     this.loadStoredState();
   }
-  componentDidMount(){
+  componentDidMount() {
     this.updateBookmarks();
     this.updateHistory();
     this.updateTopVisited();
+    this.checkPermissions();
   }
   updateTopVisited() {
     this.syncStoredState({
@@ -143,6 +144,16 @@ class App extends Component {
         console.log('Permission granted');
       else
         console.log('Permission denied');
+    });
+  }
+  checkPermissions() {
+    chrome.permissions.contains({
+      origins: ["<all_urls>"]
+    }, (granted) => {
+      if (granted)
+        console.log('Permission granted');
+      else
+        this.requestAllURLPermission();
     });
   }
   render() {

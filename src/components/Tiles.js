@@ -3,7 +3,7 @@ import url from 'url';
 
 import { Card, CardMedia, CardTitle, CardText } from 'material-ui/Card';
 
-const placeholder = 'https://www.axure.com/c/attachments/forum/7-0-general-discussion/3919d1401387174-turn-placeholder-widget-into-image-maintain-interactions-screen-shot-2014-05-29-10.46.57-am.png'
+const placeholder = 'http://www.euneighbours.eu/sites/default/files/2017-01/placeholder.png'
 
 class Tile extends Component {
   render() {
@@ -20,6 +20,7 @@ class Tile extends Component {
 
 class Tiles extends Component {
   render() {
+    // console.log(this.props.status.tiles)
     return (
       <div className="tiles-wrapper">
         {this.props.status.tiles.map((tile, i) => <Tile
