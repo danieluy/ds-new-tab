@@ -25,7 +25,7 @@ function loadLocalStorage(key) {
 }
 
 module.exports = {
-  save: sync,
+  sync: sync,
   load: fetch,
   saveLocal: saveLocalStorage,
   loadLocal: loadLocalStorage

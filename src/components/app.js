@@ -48,15 +48,33 @@ class App extends Component {
       top_visited: []
     }
   }
+
   componentWillMount() {
-    BookmarksProvider.onChange(this.updateBookmarks.bind(this));
-    this.loadStoredState();
+    this.updateWallpaper();
+    this.updateStateFromStored();
   }
   componentDidMount() {
     this.updateBookmarks();
     this.updateHistory();
     this.updateTopVisited();
     this.checkPermissions();
+    BookmarksProvider.onChange(this.updateBookmarks.bind(this));
+  }
+
+  syncStoredState(new_state) {
+    this.setState(new_state, () => {
+      StorageProvider.sync('state', {
+        bookmarks_on: this.state.bookmarks_on,
+        wallpaper_on: this.state.wallpaper_on
+      });
+      StorageProvider.saveLocal('wallpaper', this.state.wallpaper_src);
+    })
+  }
+
+  updateWallpaper() {
+    this.syncStoredState({
+      wallpaper_src: StorageProvider.loadLocal('wallpaper') || DefaultWallpaper
+    })
   }
   updateTopVisited() {
     this.syncStoredState({
@@ -70,8 +88,7 @@ class App extends Component {
           bookmarks: {
             bookmarks_bar: bookmarks.bookmarks_bar,
             other_bookmarks: bookmarks.other_bookmarks
-          },
-          wallpaper_src: StorageProvider.loadLocal('wallpaper') || DefaultWallpaper
+          }
         })
       })
   }
@@ -83,16 +100,7 @@ class App extends Component {
         })
       })
   }
-  syncStoredState(new_state) {
-    this.setState(new_state, () => {
-      StorageProvider.save('state', {
-        bookmarks_on: this.state.bookmarks_on,
-        wallpaper_on: this.state.wallpaper_on
-      });
-      StorageProvider.saveLocal('wallpaper', this.state.wallpaper_src);
-    })
-  }
-  loadStoredState() {
+  updateStateFromStored() {
     StorageProvider.load('state')
       .then((stored_state) => {
         this.syncStoredState({
@@ -138,7 +146,7 @@ class App extends Component {
     this.syncStoredState(settings);
   }
   requestAllURLPermission() {
-    // Permissions must be requested from inside a user gesture, like a button's click handler.
+    // Permissions must be requested from a user action, like a button's click handler.
     chrome.permissions.request({ origins: ["<all_urls>"] }, (granted) => {
       if (granted)
         console.log('Permission granted');
@@ -150,10 +158,8 @@ class App extends Component {
     chrome.permissions.contains({
       origins: ["<all_urls>"]
     }, (granted) => {
-      if (granted)
-        console.log('Permission granted');
-      else
-        this.requestAllURLPermission();
+      if (!granted)
+        console.error('checkPermissions -> <all_urls> refused');
     });
   }
   render() {

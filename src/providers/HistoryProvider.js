@@ -6,7 +6,8 @@ import StorageProvider from './StorageProvider';
 
 const MAX_ITEMS_TOP = 5;
 
-chrome.history.onVisited.addListener(updateStored);
+if (chrome.history)
+  chrome.history.onVisited.addListener(updateStored);
 
 function updateStored() {
   Promise.all([
@@ -16,24 +17,30 @@ function updateStored() {
     .then(top_and_thumbs => {
       storeTop(mergeHistoryThumbs(top_and_thumbs[0], top_and_thumbs[1]));
     })
+    .catch(err => { console.error('updateStored()', err) })
 }
 
 function mergeHistoryThumbs(history, thumbs) {
-  return history.map(item => {
-    item.thumb = null;
-    if (thumbs)
-      for (let i = 0; i < thumbs.length && !item.thumb; i++) {
-        console.log(i < thumbs.length && !item.thumb)
-        if (thumbs[i].url === item.url)
-          item.thumb = thumbs[i].thumb;
-      }
-    return item;
-  })
+  if (!history || !thumbs)
+    throw new Error('history and thumbs parameters must be provided');
+  if (history && thumbs)
+    return history.map(item => {
+      item.thumb = null;
+      if (thumbs)
+        for (let i = 0; i < thumbs.length && !item.thumb; i++) {
+          if (thumbs[i].url === item.url)
+            item.thumb = thumbs[i].thumb;
+        }
+      return item;
+    })
 }
 
 function getHistory() {
   return new Promise((resolve, reject) => {
-    chrome.history.search({ text: '', startTime: 0 }, resolve);
+    if (chrome.history)
+      chrome.history.search({ text: '', startTime: 0 }, resolve);
+    else
+      reject('Chrome History is not available');
   })
 }
 
@@ -60,9 +67,12 @@ function getHistory() {
 
 function getVisits(url) {
   return new Promise((resolve, reject) => {
-    chrome.history.getVisits({ url: url }, (visits) => {
-      resolve(visits);
-    })
+    if (chrome.history)
+      chrome.history.getVisits({ url: url }, (visits) => {
+        resolve(visits);
+      })
+    else
+      reject('Chrome History is not available');
   })
 }
 
@@ -87,7 +97,9 @@ function storeTop(top) {
 }
 
 function loadTop() {
-  return StorageProvider.loadLocal('top_visited') || [];
+  const stored = StorageProvider.loadLocal('top_visited');
+  // console.log(`StorageProvider.loadLocal('top_visited')`, stored)
+  return stored || [];
 }
 
 module.exports = {

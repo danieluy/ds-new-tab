@@ -5,7 +5,7 @@ import Events from './EventsProvider';
 
 function getThumbnails() {
   return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage({ getThumbs: '' }, (thumbs) => {
+    chrome.runtime.sendMessage({ getThumbs: '' }, function (thumbs) {
       resolve(thumbs);
     });
   })

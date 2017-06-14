@@ -7450,7 +7450,7 @@ function loadLocalStorage(key) {
 }
 
 module.exports = {
-  save: sync,
+  sync: sync,
   load: fetch,
   saveLocal: saveLocalStorage,
   loadLocal: loadLocalStorage
@@ -10871,19 +10871,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var MAX_ITEMS_TOP = 5;
 
-chrome.history.onVisited.addListener(updateStored);
+if (chrome.history) chrome.history.onVisited.addListener(updateStored);
 
 function updateStored() {
   Promise.all([getTop(MAX_ITEMS_TOP), _ThumbnailsProvider2.default.get()]).then(function (top_and_thumbs) {
     storeTop(mergeHistoryThumbs(top_and_thumbs[0], top_and_thumbs[1]));
+  }).catch(function (err) {
+    console.error('updateStored()', err);
   });
 }
 
 function mergeHistoryThumbs(history, thumbs) {
-  return history.map(function (item) {
+  if (!history || !thumbs) throw new Error('history and thumbs parameters must be provided');
+  if (history && thumbs) return history.map(function (item) {
     item.thumb = null;
     if (thumbs) for (var i = 0; i < thumbs.length && !item.thumb; i++) {
-      console.log(i < thumbs.length && !item.thumb);
       if (thumbs[i].url === item.url) item.thumb = thumbs[i].thumb;
     }
     return item;
@@ -10892,7 +10894,7 @@ function mergeHistoryThumbs(history, thumbs) {
 
 function getHistory() {
   return new Promise(function (resolve, reject) {
-    chrome.history.search({ text: '', startTime: 0 }, resolve);
+    if (chrome.history) chrome.history.search({ text: '', startTime: 0 }, resolve);else reject('Chrome History is not available');
   });
 }
 
@@ -10919,9 +10921,9 @@ function getHistory() {
 
 function getVisits(url) {
   return new Promise(function (resolve, reject) {
-    chrome.history.getVisits({ url: url }, function (visits) {
+    if (chrome.history) chrome.history.getVisits({ url: url }, function (visits) {
       resolve(visits);
-    });
+    });else reject('Chrome History is not available');
   });
 }
 
@@ -10946,7 +10948,9 @@ function storeTop(top) {
 }
 
 function loadTop() {
-  return _StorageProvider2.default.loadLocal('top_visited') || [];
+  var stored = _StorageProvider2.default.loadLocal('top_visited');
+  // console.log(`StorageProvider.loadLocal('top_visited')`, stored)
+  return stored || [];
 }
 
 module.exports = {
@@ -18986,8 +18990,8 @@ var App = function (_Component) {
   _createClass(App, [{
     key: 'componentWillMount',
     value: function componentWillMount() {
-      _BookmarksProvider2.default.onChange(this.updateBookmarks.bind(this));
-      this.loadStoredState();
+      this.updateWallpaper();
+      this.updateStateFromStored();
     }
   }, {
     key: 'componentDidMount',
@@ -18996,6 +19000,27 @@ var App = function (_Component) {
       this.updateHistory();
       this.updateTopVisited();
       this.checkPermissions();
+      _BookmarksProvider2.default.onChange(this.updateBookmarks.bind(this));
+    }
+  }, {
+    key: 'syncStoredState',
+    value: function syncStoredState(new_state) {
+      var _this2 = this;
+
+      this.setState(new_state, function () {
+        _StorageProvider2.default.sync('state', {
+          bookmarks_on: _this2.state.bookmarks_on,
+          wallpaper_on: _this2.state.wallpaper_on
+        });
+        _StorageProvider2.default.saveLocal('wallpaper', _this2.state.wallpaper_src);
+      });
+    }
+  }, {
+    key: 'updateWallpaper',
+    value: function updateWallpaper() {
+      this.syncStoredState({
+        wallpaper_src: _StorageProvider2.default.loadLocal('wallpaper') || _wallpaperDefault.DefaultWallpaper
+      });
     }
   }, {
     key: 'updateTopVisited',
@@ -19007,45 +19032,31 @@ var App = function (_Component) {
   }, {
     key: 'updateBookmarks',
     value: function updateBookmarks() {
-      var _this2 = this;
+      var _this3 = this;
 
       _BookmarksProvider2.default.get().then(function (bookmarks) {
-        _this2.syncStoredState({
+        _this3.syncStoredState({
           bookmarks: {
             bookmarks_bar: bookmarks.bookmarks_bar,
             other_bookmarks: bookmarks.other_bookmarks
-          },
-          wallpaper_src: _StorageProvider2.default.loadLocal('wallpaper') || _wallpaperDefault.DefaultWallpaper
+          }
         });
       });
     }
   }, {
     key: 'updateHistory',
     value: function updateHistory() {
-      var _this3 = this;
+      var _this4 = this;
 
       _HistoryProvider2.default.get().then(function (history) {
-        _this3.syncStoredState({
+        _this4.syncStoredState({
           history: history
         });
       });
     }
   }, {
-    key: 'syncStoredState',
-    value: function syncStoredState(new_state) {
-      var _this4 = this;
-
-      this.setState(new_state, function () {
-        _StorageProvider2.default.save('state', {
-          bookmarks_on: _this4.state.bookmarks_on,
-          wallpaper_on: _this4.state.wallpaper_on
-        });
-        _StorageProvider2.default.saveLocal('wallpaper', _this4.state.wallpaper_src);
-      });
-    }
-  }, {
-    key: 'loadStoredState',
-    value: function loadStoredState() {
+    key: 'updateStateFromStored',
+    value: function updateStateFromStored() {
       var _this5 = this;
 
       _StorageProvider2.default.load('state').then(function (stored_state) {
@@ -19110,7 +19121,7 @@ var App = function (_Component) {
   }, {
     key: 'requestAllURLPermission',
     value: function requestAllURLPermission() {
-      // Permissions must be requested from inside a user gesture, like a button's click handler.
+      // Permissions must be requested from a user action, like a button's click handler.
       chrome.permissions.request({ origins: ["<all_urls>"] }, function (granted) {
         if (granted) console.log('Permission granted');else console.log('Permission denied');
       });
@@ -19118,12 +19129,10 @@ var App = function (_Component) {
   }, {
     key: 'checkPermissions',
     value: function checkPermissions() {
-      var _this6 = this;
-
       chrome.permissions.contains({
         origins: ["<all_urls>"]
       }, function (granted) {
-        if (granted) console.log('Permission granted');else _this6.requestAllURLPermission();
+        if (!granted) console.error('checkPermissions -> <all_urls> refused');
       });
     }
   }, {

@@ -77,8 +77,10 @@
 chrome.tabs.onUpdated.addListener(mergeTabThumb);
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.getThumbs) console.log('request.getThumbs', !!request.getThumbs);
-  // sendResponse(load());
+  if (request.getThumbs === '') {
+    var _thumbs = load();
+    sendResponse(_thumbs);
+  }
 });
 
 function mergeTabThumb(tabId, changeInfo, tab) {
@@ -88,15 +90,19 @@ function mergeTabThumb(tabId, changeInfo, tab) {
       thumb: tab_thumb[1] || null
     });
   }).catch(function (err) {
-    console.error(err);
+    console.error('mergeTabThumb', err);
   });
 }
 
 function captureVisibleTab() {
   return new Promise(function (resolve, reject) {
-    chrome.tabs.captureVisibleTab({ format: 'jpeg', quality: 10 }, function (img) {
-      resolve(img);
-    });
+    try {
+      chrome.tabs.captureVisibleTab({ format: 'jpeg', quality: 10 }, function (img) {
+        resolve(img);
+      });
+    } catch (err) {
+      console.error('captureVisibleTab', err);
+    }
   });
 }
 
@@ -114,11 +120,10 @@ function getTab(tabId) {
 
 var full = false;
 
-function save(thumbs) {
+function save(thumb) {
   var stored = load();
-  if (Array.prototype.isPrototypeOf(stored)) stored.push(thumbs);else stored = [];
-
   try {
+    stored.push(thumb);
     localStorage.setItem('dsNewTabThumbs', JSON.stringify(stored));
   } catch (err) {
     full = true;
@@ -127,14 +132,21 @@ function save(thumbs) {
 }
 
 function load() {
+
+  var stored = localStorage.getItem('dsNewTabThumbs');
+
+  if (Array.prototype.isPrototypeOf(stored)) stored.push(thumbs);else stored = [];
+
   if (full) {
     reset();
     full = false;
   }
+
+  console.log('localStorage.getItem(\'dsNewTabThumbs\')', stored);
   return stored;
 }
 
-window.deleteTest = reset;
+window.resetThumbnailsService = reset;
 
 function reset() {
   localStorage.removeItem('dsNewTabThumbs');
