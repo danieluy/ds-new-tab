@@ -74,24 +74,30 @@
 "use strict";
 
 
-chrome.tabs.onUpdated.addListener(mergeTabThumb);
+chrome.tabs.onUpdated.addListener(updateStored);
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.getThumbs === '') {
-    var _thumbs = load();
-    sendResponse(_thumbs);
-  }
+  if (request.thumbnails_service === 'get_thumbnails') sendResponse(load());
 });
 
-function mergeTabThumb(tabId, changeInfo, tab) {
-  Promise.all([getTab(tabId), captureVisibleTab()]).then(function (tab_thumb) {
+function updateStored(tabId, changeInfo, tab) {
+  if (!ignored(tab.url)) mergeTabThumb(tabId).then(function (tab_thumb) {
     save({
       url: tab_thumb[0].url,
       thumb: tab_thumb[1] || null
     });
   }).catch(function (err) {
-    console.error('mergeTabThumb', err);
+    console.error('updateStored', err);
   });
+}
+
+function ignored(url) {
+  if (url.match(/chrome:\/\//, 'g')) // Chrome local addresses
+    return true;
+}
+
+function mergeTabThumb(tabId) {
+  return Promise.all([getTab(tabId), captureVisibleTab()]);
 }
 
 function captureVisibleTab() {
@@ -101,7 +107,7 @@ function captureVisibleTab() {
         resolve(img);
       });
     } catch (err) {
-      console.error('captureVisibleTab', err);
+      reject(err);
     }
   });
 }
@@ -124,25 +130,23 @@ function save(thumb) {
   var stored = load();
   try {
     stored.push(thumb);
+    // console.log(`ThumbnailsBackgroundService.save()`, stored);
     localStorage.setItem('dsNewTabThumbs', JSON.stringify(stored));
   } catch (err) {
     full = true;
-    console.error(err);
+    console.log("Thumbnails background service's storage reached its limit and was emptied");
+  } finally {
+    chrome.runtime.sendMessage({ thumbnails_service: 'stored_updated' });
   }
 }
 
 function load() {
-
-  var stored = localStorage.getItem('dsNewTabThumbs');
-
-  if (Array.prototype.isPrototypeOf(stored)) stored.push(thumbs);else stored = [];
-
-  if (full) {
+  var stored = JSON.parse(localStorage.getItem('dsNewTabThumbs'));
+  if (!Array.prototype.isPrototypeOf(stored) || full) {
     reset();
     full = false;
   }
-
-  console.log('localStorage.getItem(\'dsNewTabThumbs\')', stored);
+  // console.log(`ThumbnailsBackgroundService.load()`, stored);
   return stored;
 }
 
@@ -150,6 +154,7 @@ window.resetThumbnailsService = reset;
 
 function reset() {
   localStorage.removeItem('dsNewTabThumbs');
+  localStorage.setItem('dsNewTabThumbs', JSON.stringify([]));
 }
 
 /***/ })

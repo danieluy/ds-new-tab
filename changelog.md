@@ -5,7 +5,8 @@
  - Handle the permissions request
  - Report issue rendering ListItem with secondaryText to Material-UI
 ### v0.3.0
-* 20170614 | F | Solving some issues on thumbnails service and its implementation
+* 20170615 | F | Working on thumbnails service implementation
+* 20170615 | F | Solved some issues on thumbnails service
 * 20170614 | F | Improved wallpaper loading performance
 * 20170613 | F | Fixed reference on Wallpaper component
 * 20170612 | P | Minor improvements to Tiles
