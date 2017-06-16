@@ -130,7 +130,6 @@ function save(thumb) {
   var stored = load();
   try {
     stored.push(thumb);
-    // console.log(`ThumbnailsBackgroundService.save()`, stored);
     localStorage.setItem('dsNewTabThumbs', JSON.stringify(stored));
   } catch (err) {
     full = true;
@@ -146,7 +145,6 @@ function load() {
     reset();
     full = false;
   }
-  // console.log(`ThumbnailsBackgroundService.load()`, stored);
   return stored;
 }
 

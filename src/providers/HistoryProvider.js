@@ -7,9 +7,11 @@ import url from 'url';
 
 const MAX_ITEMS_TOP = 5;
 
+
 Events.on('thumbnails_updated', updateStoredTopVisited);
-if (chrome.history)
+setTimeout(function () {
   chrome.history.onVisited.addListener(updateStoredTopVisited);
+}, 100);
 
 function updateStoredTopVisited() {
   Promise.all([
@@ -17,9 +19,22 @@ function updateStoredTopVisited() {
     ThumbnailsProvider.get()
   ])
     .then(top_and_thumbs => {
-      storeTop(mergeTopVisitedAndThumbs(top_and_thumbs[0], top_and_thumbs[1]));
+      const updatedTop = mergeNewAndStoredTopThumbnails(top_and_thumbs[0]);
+      const mergedTopAndThumbs = mergeTopVisitedAndThumbs(updatedTop, top_and_thumbs[1]);
+      storeTop(mergedTopAndThumbs);
     })
     .catch(err => { console.error('updateStoredTopVisited()', err) })
+}
+
+function mergeNewAndStoredTopThumbnails(updatedTop) {
+  const storedTop = loadTop();
+  return updatedTop.map(uTop => {
+    storedTop.forEach(sTop => {
+      if (uTop.url === sTop.url && !uTop.thumb)
+        uTop.thumb = sTop.thumb;
+    });
+    return uTop;
+  })
 }
 
 function mergeTopVisitedAndThumbs(top_visited, thumbs) {
@@ -64,9 +79,9 @@ function getTop(limit) {
       .then(history => {
         const sorted = history
           .sort((a, b) => b.visitCount - a.visitCount)
-          // .reduce((domains, item) => {
-          //   return domains
-          // }, [])
+        // .reduce((domains, item) => {
+        //   return domains
+        // }, [])
         const top = [];
         for (let i = 0; i < limit; i++)
           top.push(sorted[i]);
