@@ -92,7 +92,7 @@ function updateStored(tabId, changeInfo, tab) {
 }
 
 function ignored(url) {
-  if (url.match(/chrome:\/\//, 'g')) // Chrome local addresses
+  if (url.match(/chrome:\/\//)) // Chrome local addresses
     return true;
 }
 

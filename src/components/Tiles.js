@@ -19,18 +19,22 @@ class Tile extends Component {
 }
 
 class Tiles extends Component {
+  getTiles(tiles) {
+    if (tiles.length)
+      return tiles.map((tile, i) => {
+        return (
+          <Tile
+            key={i}
+            title={tile.title || tile.url}
+            url={tile.url}
+            thumbnail={tile.thumb}
+          />
+        )
+      })
+    return <div>The most visited pages will appear shortly</div>;
+  }
   render() {
-    // console.log(this.props.status.tiles)
-    return (
-      <div className="tiles-wrapper">
-        {this.props.status.tiles.map((tile, i) => <Tile
-          key={i}
-          title={tile.title || tile.url}
-          url={tile.url}
-          thumbnail={tile.thumb}
-        />)}
-      </div>
-    );
+    return <div className="tiles-wrapper">{this.getTiles(this.props.status.tiles)}</div>;
   }
 }
 

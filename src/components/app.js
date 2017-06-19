@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { app as styles, bookmarks_wrapper, color } from '../assets/styles';
-import { DefaultWallpaper } from '../assets/wallpaper-default';
+import { DefaultWallpaper } from '../assets/images-base64/wallpaper-default';
 
 import StorageProvider from '../providers/StorageProvider';
 import Language from '../assets/Language';

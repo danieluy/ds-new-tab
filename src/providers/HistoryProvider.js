@@ -19,34 +19,31 @@ function updateStoredTopVisited() {
     ThumbnailsProvider.get()
   ])
     .then(top_and_thumbs => {
-      const updatedTop = mergeNewAndStoredTopThumbnails(top_and_thumbs[0]);
-      const mergedTopAndThumbs = mergeTopVisitedAndThumbs(updatedTop, top_and_thumbs[1]);
-      storeTop(mergedTopAndThumbs);
+      const top_with_thumbs = mergeStoredThumbnails(top_and_thumbs[0]);
+      const updated_thumbs = updateTumbnails(top_with_thumbs, top_and_thumbs[1]);
+      storeTop(updated_thumbs);
     })
     .catch(err => { console.error('updateStoredTopVisited()', err) })
 }
 
-function mergeNewAndStoredTopThumbnails(updatedTop) {
-  const storedTop = loadTop();
-  return updatedTop.map(uTop => {
-    storedTop.forEach(sTop => {
-      if (uTop.url === sTop.url && !uTop.thumb)
-        uTop.thumb = sTop.thumb;
+function mergeStoredThumbnails(top) {
+  return top.map(upd_top => {
+    loadTop().forEach(str_top => {
+      if (upd_top.url === str_top.url)
+        upd_top.thumb = str_top.thumb;
     });
-    return uTop;
+    return upd_top;
   })
 }
 
-function mergeTopVisitedAndThumbs(top_visited, thumbs) {
-  if (!top_visited || !thumbs)
-    throw new Error('top_visited and thumbs parameters must be provided');
-  return top_visited.map(item => {
-    item.thumb = null;
-    for (let i = 0; i < thumbs.length && !item.thumb; i++) {
-      if (thumbs[i].url === item.url) {
-        item.thumb = thumbs[i].thumb;
-      }
-    }
+function updateTumbnails(top, thumbs) {
+  if (!top || !thumbs)
+    throw new Error('top and thumbs parameters must be provided');
+  return top.map(item => {
+    thumbs.forEach(thumb => {
+      if (item.url === thumb.url)
+        item.thumb = thumb.thumb;
+    })
     return item;
   })
 }
@@ -96,9 +93,7 @@ function storeTop(top) {
 }
 
 function loadTop() {
-  const stored = StorageProvider.loadLocal('top_visited');
-  // console.log(`StorageProvider.loadLocal('top_visited')`, stored)
-  return stored || [];
+  return StorageProvider.loadLocal('top_visited') || [];
 }
 
 module.exports = {
