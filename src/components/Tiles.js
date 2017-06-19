@@ -1,19 +1,26 @@
 import React, { Component } from 'react';
 import url from 'url';
 
+import HistoryProvider from '../providers/HistoryProvider';
+
 import { Card, CardMedia, CardTitle, CardText } from 'material-ui/Card';
 
 const placeholder = 'http://www.euneighbours.eu/sites/default/files/2017-01/placeholder.png'
 
 class Tile extends Component {
   render() {
+    const visits = this.props.visits === 1 ? `${this.props.visits} visit to: ` : `${this.props.visits} visits to: `
     return (
-      <a href={this.props.url} className="tile">
-        <div className="tile-img" style={{ backgroundImage: `url("${this.props.thumbnail || placeholder}")` }} title={this.props.url} />
-        <div className="tile-title-wrapper">
-          <div className="tile-title">{this.props.title}</div>
-        </div>
-      </a>
+      <div className="tile">
+        <a href={this.props.url} className="tile-link">
+          <div className="tile-img" style={{ backgroundImage: `url("${this.props.thumbnail || placeholder}")` }} title={`${visits} ${this.props.url}`} />
+          <div className="tile-title-wrapper">
+            <div className="tile-title">{this.props.title}</div>
+          </div>
+        </a>
+        <button className="tile-btn-close" onClick={HistoryProvider.ignoreOnTop.bind(null, this.props.url)}>&times;</button>
+      </div>
+
     )
   }
 }
@@ -28,6 +35,7 @@ class Tiles extends Component {
             title={tile.title || tile.url}
             url={tile.url}
             thumbnail={tile.thumb}
+            visits={tile.visitCount}
           />
         )
       })

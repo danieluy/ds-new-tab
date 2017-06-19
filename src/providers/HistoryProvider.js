@@ -3,12 +3,14 @@
 import Events from './EventsProvider';
 import ThumbnailsProvider from './ThumbnailsProvider';
 import StorageProvider from './StorageProvider';
-import url from 'url';
+import URL from 'url';
 
 const MAX_ITEMS_TOP = 5;
 
 
 Events.on('thumbnails_updated', updateStoredTopVisited);
+Events.on('ignored_on_top_visited_updated', updateStoredTopVisited);
+
 setTimeout(function () {
   chrome.history.onVisited.addListener(updateStoredTopVisited);
 }, 100);
@@ -74,11 +76,17 @@ function getTop(limit) {
   return new Promise((resolve, reject) => {
     getHistory()
       .then(history => {
+        const hostnames = [];
         const sorted = history
           .sort((a, b) => b.visitCount - a.visitCount)
-        // .reduce((domains, item) => {
-        //   return domains
-        // }, [])
+          .filter(item => {
+            const hostname = getRelevantURL(item.url);
+            if (hostnames.indexOf(hostname, 0) < 0) {
+              hostnames.push(hostname);
+              return isIgnored(item.url);
+            }
+            return false;
+          })
         const top = [];
         for (let i = 0; i < limit; i++)
           top.push(sorted[i]);
@@ -87,10 +95,34 @@ function getTop(limit) {
   })
 }
 
-function storeTop(top) {
-  StorageProvider.saveLocal('top_visited', top);
-  Events.emit('stored_top_visited_updated');
+function getRelevantURL(url) {
+  const parsed_url = URL.parse(url);
+  return parsed_url.protocol + parsed_url.hostname;
 }
+
+function isIgnored(url) {
+  const ignored = StorageProvider.loadLocal('ignored_on_top_visited') || [];
+  return ignored.indexOf(url, 0) < 0;
+}
+
+function storeTop(top) {
+  try {
+    StorageProvider.saveLocal('top_visited', top);
+    Events.emit('top_visited_updated', top);
+  }
+  catch (err) {
+    console.error(err);
+  }
+}
+
+function ignoreOnTopVisited(url) {
+  StorageProvider.addLocal('ignored_on_top_visited', url);
+  Events.emit('ignored_on_top_visited_updated');
+}
+
+window.ignoreOnTopVisited = ignoreOnTopVisited;
+window.getIgnored = () => { console.log(StorageProvider.loadLocal('ignored_on_top_visited')) }
+window.resetIgnored = () => { localStorage.removeItem('ignored_on_top_visited') }
 
 function loadTop() {
   return StorageProvider.loadLocal('top_visited') || [];
@@ -98,7 +130,8 @@ function loadTop() {
 
 module.exports = {
   get: getHistory,
-  getTopTen: loadTop
+  getTopTen: loadTop,
+  ignoreOnTop: ignoreOnTopVisited
 }
 
 

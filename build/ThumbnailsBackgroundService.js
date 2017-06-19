@@ -81,13 +81,23 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 function updateStored(tabId, changeInfo, tab) {
-  if (!ignored(tab.url)) mergeTabThumb(tabId).then(function (tab_thumb) {
+  if (!ignored(tab.url)) checkTabIsActive(tabId).then(function () {
+    return mergeTabThumb(tabId);
+  }).then(function (tab_thumb) {
     save({
       url: tab_thumb[0].url,
       thumb: tab_thumb[1] || null
     });
   }).catch(function (err) {
-    console.error('updateStored', err);
+    console.error('updateStored()', err);
+  });
+}
+
+function checkTabIsActive(tabId) {
+  return new Promise(function (resolve, reject) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (result) {
+      result[0].id === tabId ? resolve() : reject('Active tab has changed');
+    });
   });
 }
 
@@ -97,10 +107,10 @@ function ignored(url) {
 }
 
 function mergeTabThumb(tabId) {
-  return Promise.all([getTab(tabId), captureVisibleTab()]);
+  return Promise.all([getTab(tabId), captureVisibleTab(tabId)]);
 }
 
-function captureVisibleTab() {
+function captureVisibleTab(tabId) {
   return new Promise(function (resolve, reject) {
     try {
       chrome.tabs.captureVisibleTab({ format: 'jpeg', quality: 10 }, function (img) {

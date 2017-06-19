@@ -45,7 +45,11 @@ class App extends Component {
       about_panel_modal_open: false,
       bookmarks_modal_open: false,
       history_open: false,
-      top_visited: []
+      top_visited: [],
+      window: {
+        width: window.innerWidth,
+        height: window.innerHeight
+      }
     }
   }
 
@@ -58,7 +62,18 @@ class App extends Component {
     this.updateHistory();
     this.updateTopVisited();
     this.checkPermissions();
-    BookmarksProvider.onChange(this.updateBookmarks.bind(this));
+    Events.on('bookmars_changed', this.updateBookmarks.bind(this));
+    Events.on('top_visited_updated', this.updateTopVisited.bind(this));
+    window.onresize = this.updateWindowState.bind(this);
+  }
+
+  updateWindowState() {
+    this.setState({
+      window: {
+        width: window.innerWidth,
+        height: window.innerHeight
+      }
+    })
   }
 
   syncStoredState(new_state) {
@@ -213,7 +228,7 @@ class App extends Component {
 
           <div style={styles.body_wrapper}>
 
-            {this.state.bookmarks_on ?
+            {this.state.bookmarks_on && this.state.window.width >= 1000 ?
               <div style={bookmarks_wrapper} className="bookmarks-bar">
                 <BookmarksList
                   language={LANG}

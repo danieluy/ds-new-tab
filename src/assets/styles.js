@@ -31,6 +31,7 @@ const app = {
     position: 'fixed',
     height: `${window.innerHeight - 64}px`,
     width: '100%',
+    minWidth: '1000px',
     top: '64px',
     overflow: 'auto'
   }
@@ -44,8 +45,7 @@ const bookmarks_list = {
   }
 }
 const bookmarks_wrapper = {
-  height: `${window.innerHeight - 128}px`,
-  top: '64px'
+  height: `${window.innerHeight - 128}px`
 }
 
 export { color, app, bookmarks_list, bookmarks_wrapper }

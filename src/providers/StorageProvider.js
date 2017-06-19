@@ -24,9 +24,18 @@ function loadLocalStorage(key) {
   return JSON.parse(localStorage.getItem(key));
 }
 
+function addToLocalStorage(key, data) {
+  let stored = loadLocalStorage(key);
+  if(!Array.prototype.isPrototypeOf(stored))
+    stored = [];
+  stored.push(data);
+  saveLocalStorage(key, stored);
+}
+
 module.exports = {
   sync: sync,
   load: fetch,
   saveLocal: saveLocalStorage,
-  loadLocal: loadLocalStorage
+  loadLocal: loadLocalStorage,
+  addLocal: addToLocalStorage
 }

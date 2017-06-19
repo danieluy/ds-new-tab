@@ -1,5 +1,7 @@
 "use strict";
 
+import Events from './EventsProvider';
+
 function getBookmarks() {
   return new Promise((resolve, reject) => {
     chrome.bookmarks.getTree((bookmarks_tree) => {
@@ -26,7 +28,7 @@ function deleteBookmark(id) {
   })
 }
 
-function onChange(cb){
+(function listenToBookmarksEvents(cb) {
   chrome.bookmarks.onCreated.addListener(cb);
   chrome.bookmarks.onRemoved.addListener(cb);
   chrome.bookmarks.onChanged.addListener(cb);
@@ -34,10 +36,9 @@ function onChange(cb){
   chrome.bookmarks.onChildrenReordered.addListener(cb);
   chrome.bookmarks.onImportBegan.addListener(cb);
   chrome.bookmarks.onImportEnded.addListener(cb);
-}
+})(() => { Events.emit('bookmars_changed') });
 
 module.exports = {
   get: getBookmarks,
-  delete: deleteBookmark,
-  onChange: onChange
+  delete: deleteBookmark
 }

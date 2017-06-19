@@ -9,7 +9,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 function updateStored(tabId, changeInfo, tab) {
   if (!ignored(tab.url))
-    mergeTabThumb(tabId)
+    checkTabIsActive(tabId)
+      .then(() => mergeTabThumb(tabId))
       .then(tab_thumb => {
         save({
           url: tab_thumb[0].url,
@@ -17,8 +18,16 @@ function updateStored(tabId, changeInfo, tab) {
         })
       })
       .catch(err => {
-        console.error('updateStored', err)
+        console.error('updateStored()', err)
       })
+}
+
+function checkTabIsActive(tabId) {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (result) => {
+      result[0].id === tabId ? resolve() : reject('Active tab has changed');
+    })
+  })
 }
 
 function ignored(url) {
@@ -29,15 +38,16 @@ function ignored(url) {
 function mergeTabThumb(tabId) {
   return Promise.all([
     getTab(tabId),
-    captureVisibleTab()
+    captureVisibleTab(tabId)
   ])
 }
 
-function captureVisibleTab() {
+function captureVisibleTab(tabId) {
   return new Promise((resolve, reject) => {
     try {
       chrome.tabs.captureVisibleTab({ format: 'jpeg', quality: 10 }, img => { resolve(img) })
-    } catch (err) {
+    }
+    catch (err) {
       reject(err);
     }
   })

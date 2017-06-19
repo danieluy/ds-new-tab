@@ -5,7 +5,10 @@
  - Handle the permissions request
  - Report issue rendering ListItem with secondaryText to Material-UI
 ### v0.3.0
-* 20170616 | P | Solved thumbnails assign
+* 20170619 | P | Bookmarks auto-hide if window.innerWidth < 1000px
+* 20170619 | P | Set the min app width to 1000px
+* 20170619 | F | Fixed capturing the wrong tab
+* 20170616 | P | Solved thumbnails assignment
 * 20170615 | F | Solved some issues on thumbnails service
 * 20170614 | F | Improved wallpaper loading performance
 * 20170613 | F | Fixed reference on Wallpaper component
