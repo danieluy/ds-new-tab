@@ -65,7 +65,6 @@ class App extends Component {
     this.updateBookmarks();
     this.updateHistory();
     this.updateTopVisited();
-    this.checkPermissions();
     Events.on('bookmars_changed', this.updateBookmarks.bind(this));
     Events.on('top_visited_updated', this.updateTopVisited.bind(this));
     window.onresize = this.updateWindowState.bind(this);

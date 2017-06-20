@@ -7,29 +7,41 @@ import { Permissions } from '../assets/icons';
 
 class TopVisitedSettingsDialog extends Component {
 
-  toggleVisible(props, evt, toggled) {
+  constructor() {
+    super();
+    this.state = {
+      all_urls_permission: false
+    }
+  }
 
-    props.actions.handleSettings({
-      top_visited_on: toggled
-    });
+  componentWillMount() {
+    this.checkPermissions();
+  }
+
+  toggleVisible(props, evt, toggled) {
+    if (this.state.all_urls_permission)
+      props.actions.handleSettings({
+        top_visited_on: toggled
+      });
+    else
+      this.requestAllURLPermission.call(this);
   }
 
   requestAllURLPermission() {
     // Permissions must be requested from a user action, like a button's click handler.
     chrome.permissions.request({ origins: ["<all_urls>"] }, (granted) => {
-      if (granted)
-        console.log('Permission granted');
-      else
-        console.log('Permission denied');
+      console.log('granted', granted)
+      this.setState({
+        all_urls_permission: granted
+      })
     });
   }
 
   checkPermissions() {
-    chrome.permissions.contains({
-      origins: ["<all_urls>"]
-    }, (granted) => {
-      if (!granted)
-        console.error('checkPermissions -> <all_urls> refused');
+    chrome.permissions.contains({ origins: ["<all_urls>"] }, (granted) => {
+      this.setState({
+        all_urls_permission: granted
+      })
     });
   }
 
@@ -59,8 +71,9 @@ class TopVisitedSettingsDialog extends Component {
           <div style={{ width: 'calc(100% - 48px)' }}>
             <Toggle
               label={'Required permissions'}
-              defaultToggled={this.props.status.main_switch_toggled}
-              onToggle={this.toggleVisible.bind(this, this.props)}
+              defaultToggled={this.state.all_urls_permission}
+              disabled={this.state.all_urls_permission}
+              onToggle={this.requestAllURLPermission.bind(this)}
             />
           </div>
         </div>

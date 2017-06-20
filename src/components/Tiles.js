@@ -39,7 +39,7 @@ class Tiles extends Component {
           />
         )
       })
-    return <div>The most visited pages will appear shortly</div>;
+    return <div>Your most visited pages will appear here as soon as you visit any page</div>;
   }
   render() {
     return <div className="tiles-wrapper">{this.getTiles(this.props.status.tiles)}</div>;
