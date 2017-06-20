@@ -11,7 +11,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 
-import { Bookmark, Wallpaper as WallpaperIcon, About, History as HistoryIcon, Permissions } from '../assets/icons';
+import { Bookmark, Wallpaper as WallpaperIcon, About, History as HistoryIcon, Permissions, Chart } from '../assets/icons';
 
 class MainDrawer extends Component {
   render() {
@@ -39,6 +39,11 @@ class MainDrawer extends Component {
         <MenuItem
           leftIcon={<Bookmark />}
           onTouchTap={this.props.actions.menu_items.bookmarks.onTouchTap}>{LANG.bookmarks}
+        </MenuItem>
+
+        <MenuItem
+          leftIcon={<Chart />}
+          onTouchTap={this.props.actions.menu_items.top_visited.onTouchTap}>{LANG.top_visited}
         </MenuItem>
 
         <MenuItem

@@ -2,6 +2,7 @@ module.exports = {
   app_name: 'DS NewTab',
   bookmarks: 'Bookmarks',
   wallpaper: 'Wallpaper',
+  top_visited: 'Most Visited',
   history: 'History',
   active: 'Active',
   permissions: 'Enable thumbnails on recent shortcuts',

@@ -62,4 +62,9 @@ const Permissions = (props) => (
     <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
   </SvgIcon>
 );
-export { Bookmark, Wallpaper, Download, Upload, Extension, Settings, Link, About, History, Lock, LockOpen, Permissions }
+const Chart = (props) => (
+  <SvgIcon {...props}>
+    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+  </SvgIcon>
+);
+export { Bookmark, Wallpaper, Download, Upload, Extension, Settings, Link, About, History, Lock, LockOpen, Permissions, Chart }

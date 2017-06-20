@@ -15,6 +15,10 @@ setTimeout(function () {
   chrome.history.onVisited.addListener(updateStoredTopVisited);
 }, 100);
 
+setTimeout(function () {
+  updateStoredTopVisited();
+}, 500);
+
 function updateStoredTopVisited() {
   Promise.all([
     getTop(MAX_ITEMS_TOP),
@@ -120,10 +124,6 @@ function ignoreOnTopVisited(url) {
   Events.emit('ignored_on_top_visited_updated');
 }
 
-window.ignoreOnTopVisited = ignoreOnTopVisited;
-window.getIgnored = () => { console.log(StorageProvider.loadLocal('ignored_on_top_visited')) }
-window.resetIgnored = () => { localStorage.removeItem('ignored_on_top_visited') }
-
 function loadTop() {
   return StorageProvider.loadLocal('top_visited') || [];
 }
@@ -133,6 +133,13 @@ module.exports = {
   getTopTen: loadTop,
   ignoreOnTop: ignoreOnTopVisited
 }
+
+
+
+
+window.ignoreOnTopVisited = ignoreOnTopVisited;
+window.getIgnored = () => { console.log(StorageProvider.loadLocal('ignored_on_top_visited')) }
+window.resetIgnored = () => { localStorage.removeItem('ignored_on_top_visited') }
 
 
 

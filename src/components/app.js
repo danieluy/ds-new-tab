@@ -15,6 +15,7 @@ import Wallpaper from './Wallpaper';
 import History from './History';
 import WallpaperSettingsDialog from './WallpaperSettingsDialog';
 import BookmarksSettingsDialog from './BookmarksSettingsDialog';
+import TopVisitedSettingsDialog from './TopVisitedSettingsDialog';
 import AboutPanelDialog from './AboutPanelDialog';
 import Tiles from './Tiles';
 
@@ -40,11 +41,13 @@ class App extends Component {
       history: [],
       drawer_open: false,
       wallpaper_src: null,
-      wallpaper_modal_open: false,
+      wallpaper_settings_dialog_open: false,
       wallpaper_backgroung_color: '#eeeeee',
       about_panel_modal_open: false,
-      bookmarks_modal_open: false,
+      bookmarks_settings_dialog_open: false,
       history_open: false,
+      top_visited_on: false,
+      top_visited_settings_dialog_open: false,
       top_visited: [],
       window: {
         width: window.innerWidth,
@@ -57,6 +60,7 @@ class App extends Component {
     this.updateWallpaper();
     this.updateStateFromStored();
   }
+
   componentDidMount() {
     this.updateBookmarks();
     this.updateHistory();
@@ -80,10 +84,21 @@ class App extends Component {
     this.setState(new_state, () => {
       StorageProvider.sync('state', {
         bookmarks_on: this.state.bookmarks_on,
-        wallpaper_on: this.state.wallpaper_on
+        wallpaper_on: this.state.wallpaper_on,
+        top_visited_on: this.state.top_visited_on
       });
       StorageProvider.saveLocal('wallpaper', this.state.wallpaper_src);
     })
+  }
+  updateStateFromStored() {
+    StorageProvider.load('state')
+      .then((stored_state) => {
+        this.syncStoredState({
+          bookmarks_on: (stored_state && stored_state.bookmarks_on !== undefined) ? stored_state.bookmarks_on : true,
+          wallpaper_on: (stored_state && stored_state.wallpaper_on !== undefined) ? stored_state.wallpaper_on : true,
+          top_visited_on: (stored_state && stored_state.top_visited_on !== undefined) ? stored_state.top_visited_on : false
+        });
+      })
   }
 
   updateWallpaper() {
@@ -115,15 +130,6 @@ class App extends Component {
         })
       })
   }
-  updateStateFromStored() {
-    StorageProvider.load('state')
-      .then((stored_state) => {
-        this.syncStoredState({
-          bookmarks_on: (stored_state && stored_state.bookmarks_on !== undefined) ? stored_state.bookmarks_on : true,
-          wallpaper_on: (stored_state && stored_state.wallpaper_on !== undefined) ? stored_state.wallpaper_on : true
-        });
-      })
-  }
   toggleDrawer() {
     this.syncStoredState({
       drawer_open: !this.state.drawer_open
@@ -131,12 +137,17 @@ class App extends Component {
   }
   toggleWallpaperSettings() {
     this.syncStoredState({
-      wallpaper_modal_open: !this.state.wallpaper_modal_open
+      wallpaper_settings_dialog_open: !this.state.wallpaper_settings_dialog_open
     })
   }
   toggleBookmarksSettings() {
     this.syncStoredState({
-      bookmarks_modal_open: !this.state.bookmarks_modal_open
+      bookmarks_settings_dialog_open: !this.state.bookmarks_settings_dialog_open
+    })
+  }
+  toggleTopVisitedSettings() {
+    this.syncStoredState({
+      top_visited_settings_dialog_open: !this.state.top_visited_settings_dialog_open
     })
   }
   toggleAboutPanel() {
@@ -154,28 +165,8 @@ class App extends Component {
       bookmarks_on: toggle
     })
   }
-  handleWallpaperSettings(settings) {
+  handleSettings(settings) {
     this.syncStoredState(settings);
-  }
-  handleBookmarksSettings(settings) {
-    this.syncStoredState(settings);
-  }
-  requestAllURLPermission() {
-    // Permissions must be requested from a user action, like a button's click handler.
-    chrome.permissions.request({ origins: ["<all_urls>"] }, (granted) => {
-      if (granted)
-        console.log('Permission granted');
-      else
-        console.log('Permission denied');
-    });
-  }
-  checkPermissions() {
-    chrome.permissions.contains({
-      origins: ["<all_urls>"]
-    }, (granted) => {
-      if (!granted)
-        console.error('checkPermissions -> <all_urls> refused');
-    });
   }
   render() {
     const LANG = this.state.lang;
@@ -213,6 +204,9 @@ class App extends Component {
                 bookmarks: {
                   onTouchTap: this.toggleBookmarksSettings.bind(this)
                 },
+                top_visited: {
+                  onTouchTap: this.toggleTopVisitedSettings.bind(this)
+                },
                 history: {
                   onTouchTap: this.toggleHisrotyOpen.bind(this)
                 },
@@ -241,11 +235,14 @@ class App extends Component {
               : null
             }
 
-            <Tiles
-              status={{
-                tiles: this.state.top_visited
-              }}
-            />
+            {this.state.top_visited_on ?
+              <Tiles
+                status={{
+                  tiles: this.state.top_visited
+                }}
+              />
+              : null
+            }
 
           </div>
 
@@ -272,11 +269,11 @@ class App extends Component {
           {/*--  Dialogs  --------------------------------------------------------------------------------------*/}
           <WallpaperSettingsDialog
             status={{
-              open: this.state.wallpaper_modal_open,
+              open: this.state.wallpaper_settings_dialog_open,
               main_switch_toggled: this.state.wallpaper_on,
               current_wallpaper: this.state.wallpaper_src
             }}
-            handleSettings={this.handleWallpaperSettings.bind(this)}
+            handleSettings={this.handleSettings.bind(this)}
             actions={{
               open: this.toggleWallpaperSettings.bind(this)
             }}
@@ -284,13 +281,25 @@ class App extends Component {
 
           <BookmarksSettingsDialog
             status={{
-              open: this.state.bookmarks_modal_open,
+              open: this.state.bookmarks_settings_dialog_open,
               main_switch_toggled: this.state.bookmarks_on,
               language: this.state.lang
             }}
             actions={{
               open: this.toggleBookmarksSettings.bind(this),
-              handleSettings: this.handleBookmarksSettings.bind(this)
+              handleSettings: this.handleSettings.bind(this)
+            }}
+          />
+
+          <TopVisitedSettingsDialog
+            status={{
+              open: this.state.top_visited_settings_dialog_open,
+              main_switch_toggled: this.state.top_visited_on,
+              language: this.state.lang
+            }}
+            actions={{
+              open: this.toggleTopVisitedSettings.bind(this),
+              handleSettings: this.handleSettings.bind(this)
             }}
           />
 

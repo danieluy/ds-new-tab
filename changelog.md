@@ -1,10 +1,10 @@
 # DS NewTab
 ## Changelog
 ### ToDo
- - Thumbnails provider that handles the most visited, and favorite thumbs
- - Handle the permissions request
+ - Handle permissions request
  - Report issue rendering ListItem with secondaryText to Material-UI
 ### v0.3.0
+* 20170620 | P | Added top visited settings dialog and toggle
 * 20170619 | P | Bookmarks auto-hide if window.innerWidth < 1000px
 * 20170619 | P | Set the min app width to 1000px
 * 20170619 | F | Fixed capturing the wrong tab
