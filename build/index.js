@@ -19364,7 +19364,7 @@ module.exports = {
 	"manifest_version": 2,
 	"name": "DSNewTab",
 	"description": "Chrome's new tab replacement by Daniel Sosa",
-	"version": "0.6.4",
+	"version": "0.6.3",
 	"icons": {
 		"16": "icons/16x16.png",
 		"32": "icons/32x32.png",
@@ -19470,10 +19470,20 @@ module.exports = {
       features: ['Bookmarks bar replacement in case you want to maintain the functionality from the default new tab. This functionality is fully synced across devices using the Chrome bookmarks API.', 'Wallpaper saved locally for better performance. The size of the used image is limited by browser\'s localStorage API, the and it is not recomended to use anything above 3MB.', 'Future versions will include custom shortcuts and more personalization.']
     },
     changelog: {
+      'v0.6.3': 'New default wallpaper & Permissions handling',
+      'v0.6.2': 'Added Tiles settings & Bug fixes',
+      'v0.6.1': 'Lots of bug fixes and some performance improvements',
+      'v0.6.0': 'New functionality Tiles (most visited thumbnails)',
+      'v0.5.1': 'Under the hood improvements',
+      'v0.5.0': 'New functionality Thumbnails background service',
+      'v0.4.2': 'Mayor bug fix',
+      'v0.4.1': 'Improved History functionality',
+      'v0.4.0': 'New functionality History Viewer',
+      'v0.3.1': 'New Bookmarks drawer & bug fixes',
       'v0.3.0': 'New About panel',
       'v0.2.1': 'Bug fixes',
       'v0.2.0': 'New functionalities: Wallpaper and synced bookmarks',
-      'v0.1.0': 'Alpha1 with basic functionality'
+      'v0.1.0': 'Alpha with basic functionality'
     },
     author: {
       name: 'Daniel Sosa',

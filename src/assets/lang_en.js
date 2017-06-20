@@ -26,10 +26,20 @@ module.exports = {
       ]
     },
     changelog: {
+      'v0.6.3': 'New default wallpaper & Permissions handling',
+      'v0.6.2': 'Added Tiles settings & Bug fixes',
+      'v0.6.1': 'Lots of bug fixes and some performance improvements',
+      'v0.6.0': 'New functionality Tiles (most visited thumbnails)',
+      'v0.5.1': 'Under the hood improvements',
+      'v0.5.0': 'New functionality Thumbnails background service',
+      'v0.4.2': 'Mayor bug fix',
+      'v0.4.1': 'Improved History functionality',
+      'v0.4.0': 'New functionality History Viewer',
+      'v0.3.1': 'New Bookmarks drawer & bug fixes',
       'v0.3.0': 'New About panel',
       'v0.2.1': 'Bug fixes',
       'v0.2.0': 'New functionalities: Wallpaper and synced bookmarks',
-      'v0.1.0': 'Alpha1 with basic functionality'
+      'v0.1.0': 'Alpha with basic functionality'
     },
     author: {
       name: 'Daniel Sosa',
