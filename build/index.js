@@ -19467,7 +19467,7 @@ module.exports = {
     },
     description: {
       title: 'Configurable new tab for Google Chrome browser.',
-      features: ['Bookmarks bar replacement in case you want to maintain the functionality from the default new tab. This functionality is fully synced across devices using the Chrome bookmarks API.', 'Wallpaper saved locally for better performance. The size of the used image is limited by browser\'s localStorage API, the and it is not recomended to use anything above 3MB.', 'Future versions will include custom shortcuts and more personalization.']
+      features: ['Bookmarks bar replacement in case you want to maintain the functionality from the default new tab. This functionality is fully synced across devices using the Chrome bookmarks API.', 'Wallpaper saved locally for better performance. The size of the used image is limited by browser\'s localStorage API, the and it is not recomended to use anything above 3MB.', 'Tiles displaying the top five of the most visited sites with thumbnails. Optional feature that uses your local history.', 'Simple local history viewer.']
     },
     changelog: {
       'v0.6.3': 'New default wallpaper & Permissions handling',
@@ -24460,10 +24460,6 @@ function getBrowserName(browserInfo) {
  */
 function getBrowserInformation(userAgent) {
   var browserInfo = _bowser2.default._detect(userAgent);
-
-  if (browserInfo.yandexbrowser) {
-    browserInfo = _bowser2.default._detect(userAgent.replace(/YaBrowser\/[0-9.]*/, ''));
-  }
 
   for (var browser in prefixByBrowser) {
     if (browserInfo.hasOwnProperty(browser)) {
