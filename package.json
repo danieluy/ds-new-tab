@@ -4,7 +4,7 @@
   "main": "main.js",
   "scripts": {
     "start": "webpack --config ./webpack.config.js --watch",
-    "dist": "webpack --config ./webpack.config.dist.js",
+    "dist": "webpack --config ./webpack.config.dist.js -p",
     "test": "mocha --timeout 2000",
     "prestart": "npm test"
   },

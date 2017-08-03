@@ -3,6 +3,8 @@
 ### ToDo
  - Improve permissions handling
  - Report issue rendering ListItem with secondaryText to Material-UI
+### v0.6.4
+* 20170802 | P | Optimized build for production
 ### v0.6.3
 * 20170620 | P | New default wallpaper
 * 20170620 | P | Permissions hadling for Tiles
