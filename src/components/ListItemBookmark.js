@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import url from 'url';
 
@@ -16,7 +16,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 import { ThreeDotsMenu } from './ThreeDotsMenu';
 
-class ListItemBookmark extends Component {
+class ListItemBookmark extends PureComponent {
 
   getFavicon(URL) {
     const parsed = url.parse(URL);

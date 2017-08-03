@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { app as styles } from '../assets/styles';
 
@@ -13,7 +13,7 @@ import Subheader from 'material-ui/Subheader';
 
 import { Bookmark, Wallpaper as WallpaperIcon, About, History as HistoryIcon, Permissions, Chart } from '../assets/icons';
 
-class MainDrawer extends Component {
+class MainDrawer extends PureComponent {
   render() {
     const LANG = this.props.status.language;
     return (

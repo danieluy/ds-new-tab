@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import Storage from '../providers/StorageProvider';
 
@@ -6,9 +6,9 @@ import { blue500 } from 'material-ui/styles/colors';
 
 import { Wallpaper as WallpaperIcon } from '../assets/icons';
 
-class Wallpaper extends Component {
+class Wallpaper extends PureComponent {
   render() {
-    if (this.props.status.visible && this.props.src) {
+    if (this.props.visible && this.props.src) {
       return (
         <div style={{
           backgroundImage: `url("${this.props.src}")`,
@@ -22,7 +22,7 @@ class Wallpaper extends Component {
         }} />
       );
     }
-    else if (this.props.status.visible) {
+    else if (this.props.visible) {
       return (
         <div style={{
           backgroundColor: `${this.props.color}`,

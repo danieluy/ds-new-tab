@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import Dialog from 'material-ui/Dialog';
 import Toggle from 'material-ui/Toggle';
 
-class WallpaperSettings extends Component {
+class WallpaperSettings extends PureComponent {
 
   toggleVisible(props, evt, toggled) {
     props.actions.handleSettings({

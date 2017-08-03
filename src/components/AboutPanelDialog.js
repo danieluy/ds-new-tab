@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import Dialog from 'material-ui/Dialog';
 import Subheader from 'material-ui/Subheader';
@@ -8,7 +8,7 @@ import Avatar from 'material-ui/Avatar';
 
 const manifest = require('../../build/manifest.json');
 
-class AboutPanel extends Component {
+class AboutPanel extends PureComponent {
 
   render() {
     const LANG = this.props.lang.about;

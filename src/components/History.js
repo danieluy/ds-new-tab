@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 const url = require('url');
 
@@ -9,7 +9,7 @@ import Dialog from 'material-ui/Dialog';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 
-class History extends Component {
+class History extends PureComponent {
   constructor() {
     super();
     this.state = {
@@ -74,9 +74,9 @@ class History extends Component {
 
       <Dialog
         title="History"
-        open={this.props.status.open}
+        open={this.props.visible}
         modal={false}
-        onRequestClose={this.props.actions.open}
+        onRequestClose={this.props.onRequestClose}
         autoScrollBodyContent={true}
         autoDetectWindowHeight={true}
       >

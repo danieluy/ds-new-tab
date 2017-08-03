@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { bookmarks_list as styles, color } from '../assets/styles';
 
 import ListItemBookmark from './ListItemBookmark';
@@ -10,7 +10,7 @@ import Subheader from 'material-ui/Subheader';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 
 
-class BookmarksList extends Component {
+class BookmarksList extends PureComponent {
 
   deleteBookmark;
 
@@ -82,11 +82,13 @@ class BookmarksList extends Component {
   }
 
   render() {
-    return (
-      <List style={styles.wrapper}>
-        {this.getBookmarksList(this.props.bookmarks)}
-      </List>
-    );
+    if (this.props.visible)
+      return (
+        <List style={styles.wrapper}>
+          {this.getBookmarksList(this.props.bookmarks)}
+        </List>
+      )
+    return null
   }
 }
 

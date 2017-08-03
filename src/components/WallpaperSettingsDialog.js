@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -11,7 +11,7 @@ import { Card, CardHeader, CardMedia } from 'material-ui/Card';
 
 import { Download, Upload } from '../assets/icons';
 
-class WallpaperSettings extends Component {
+class WallpaperSettings extends PureComponent {
 
   constructor() {
     super();

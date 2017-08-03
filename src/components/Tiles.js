@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import url from 'url';
 
 import HistoryProvider from '../providers/HistoryProvider';
@@ -7,7 +7,7 @@ import { Card, CardMedia, CardTitle, CardText } from 'material-ui/Card';
 
 const placeholder = 'http://www.euneighbours.eu/sites/default/files/2017-01/placeholder.png'
 
-class Tile extends Component {
+class Tile extends PureComponent {
   render() {
     const visits = this.props.visits === 1 ? `${this.props.visits} visit to: ` : `${this.props.visits} visits to: `
     return (
@@ -25,7 +25,7 @@ class Tile extends Component {
   }
 }
 
-class Tiles extends Component {
+class Tiles extends PureComponent {
   getTiles(tiles) {
     if (tiles.length)
       return tiles.map((tile, i) => {
@@ -42,7 +42,9 @@ class Tiles extends Component {
     return <div>Your most visited pages will appear here as soon as you visit any page</div>;
   }
   render() {
-    return <div className="tiles-wrapper">{this.getTiles(this.props.status.tiles)}</div>;
+    if (this.props.visible)
+      return <div className="tiles-wrapper">{this.getTiles(this.props.status.tiles)}</div>
+    return null
   }
 }
 

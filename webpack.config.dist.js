@@ -14,6 +14,24 @@ module.exports = {
   module: {
     loaders: [
       {
+        // rules: [
+        //   {
+        //     test: /\.css$/,
+        //     use: ['style-loader', 'css-loader']
+        //   }
+        // ],
+        rules: [{
+          test: /\.scss$/,
+          use: [{
+            loader: "style-loader" // creates style nodes from JS strings
+          }, {
+            loader: "css-loader" // translates CSS into CommonJS
+          }, {
+            loader: "sass-loader" // compiles Sass to CSS
+          }]
+        }]
+      },
+      {
         loader: "babel-loader",
         include: [
           path.resolve(__dirname, "src"),

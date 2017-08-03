@@ -1,4 +1,6 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+
+import _ from 'lodash';
 
 import { app as styles, bookmarks_wrapper, color } from '../assets/styles';
 import { DefaultWallpaper } from '../assets/images-base64/wallpaper-default';
@@ -18,6 +20,7 @@ import BookmarksSettingsDialog from './BookmarksSettingsDialog';
 import TopVisitedSettingsDialog from './TopVisitedSettingsDialog';
 import AboutPanelDialog from './AboutPanelDialog';
 import Tiles from './Tiles';
+import Clock from './Clock';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -29,7 +32,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 ////////////////////////////////////////////////////////////////////////////////////
 
-class App extends Component {
+class App extends PureComponent {
   constructor() {
     super();
     this.state = {
@@ -55,21 +58,29 @@ class App extends Component {
       }
     }
   }
-
   componentWillMount() {
     this.updateWallpaper();
     this.updateStateFromStored();
   }
-
   componentDidMount() {
     this.updateBookmarks();
     this.updateHistory();
     this.updateTopVisited();
     Events.on('bookmars_changed', this.updateBookmarks.bind(this));
     Events.on('top_visited_updated', this.updateTopVisited.bind(this));
-    window.onresize = this.updateWindowState.bind(this);
+    window.onresize = _.debounce(this.updateWindowState.bind(this));
   }
-
+  updateBookmarks() {
+    BookmarksProvider.get()
+      .then(bookmarks => {
+        this.syncStoredState({
+          bookmarks: {
+            bookmarks_bar: bookmarks.bookmarks_bar,
+            other_bookmarks: bookmarks.other_bookmarks
+          }
+        })
+      })
+  }
   updateWindowState() {
     this.setState({
       window: {
@@ -78,7 +89,6 @@ class App extends Component {
       }
     })
   }
-
   syncStoredState(new_state) {
     this.setState(new_state, () => {
       StorageProvider.sync('state', {
@@ -99,7 +109,6 @@ class App extends Component {
         });
       })
   }
-
   updateWallpaper() {
     this.syncStoredState({
       wallpaper_src: StorageProvider.loadLocal('wallpaper') || DefaultWallpaper
@@ -110,17 +119,6 @@ class App extends Component {
       top_visited: HistoryProvider.getTopTen()
     })
   }
-  updateBookmarks() {
-    BookmarksProvider.get()
-      .then(bookmarks => {
-        this.syncStoredState({
-          bookmarks: {
-            bookmarks_bar: bookmarks.bookmarks_bar,
-            other_bookmarks: bookmarks.other_bookmarks
-          }
-        })
-      })
-  }
   updateHistory() {
     HistoryProvider.get()
       .then(history => {
@@ -129,42 +127,37 @@ class App extends Component {
         })
       })
   }
-  toggleDrawer() {
+  openCloseDrawer() {
     this.syncStoredState({
       drawer_open: !this.state.drawer_open
     })
   }
-  toggleWallpaperSettings() {
+  openCloseWallpaperDialog() {
     this.syncStoredState({
       wallpaper_settings_dialog_open: !this.state.wallpaper_settings_dialog_open
     })
   }
-  toggleBookmarksSettings() {
+  openCloseBookmarksDialog() {
     this.syncStoredState({
       bookmarks_settings_dialog_open: !this.state.bookmarks_settings_dialog_open
     })
   }
-  toggleTopVisitedSettings() {
+  openCloseTopVisitedDialog() {
     this.syncStoredState({
       top_visited_settings_dialog_open: !this.state.top_visited_settings_dialog_open
     })
   }
-  toggleAboutPanel() {
+  openCloseAboutPanel() {
     this.syncStoredState({
       about_panel_modal_open: !this.state.about_panel_modal_open
     })
   }
-  toggleHisrotyOpen() {
+  openHistoryDialog() {
     this.syncStoredState({
       history_open: !this.state.history_open
     })
   }
-  toggleBookmarks(evt, toggle) {
-    this.syncStoredState({
-      bookmarks_on: toggle
-    })
-  }
-  handleSettings(settings) {
+  handleSettingsFromChilds(settings) {
     this.syncStoredState(settings);
   }
   render() {
@@ -179,8 +172,10 @@ class App extends Component {
       }>
         <div /*Single element for MuiThemeProvider*/>
 
+          <Clock />
+
           <AppBar
-            onLeftIconButtonTouchTap={this.toggleDrawer.bind(this)}
+            onLeftIconButtonTouchTap={this.openCloseDrawer.bind(this)}
             style={styles.app_bar.root}
             titleStyle={styles.app_bar.title}
             iconStyleLeft={styles.app_bar.iconLeft}
@@ -192,28 +187,28 @@ class App extends Component {
               language: LANG
             }}
             actions={{
-              onRequestChange: this.toggleDrawer.bind(this),
+              onRequestChange: this.openCloseDrawer.bind(this),
               app_bar: {
-                onLeftIconButtonTouchTap: this.toggleDrawer.bind(this)
+                onLeftIconButtonTouchTap: this.openCloseDrawer.bind(this)
               },
               menu_items: {
                 wallpaper: {
-                  onTouchTap: this.toggleWallpaperSettings.bind(this)
+                  onTouchTap: this.openCloseWallpaperDialog.bind(this)
                 },
                 bookmarks: {
-                  onTouchTap: this.toggleBookmarksSettings.bind(this)
+                  onTouchTap: this.openCloseBookmarksDialog.bind(this)
                 },
                 top_visited: {
-                  onTouchTap: this.toggleTopVisitedSettings.bind(this)
+                  onTouchTap: this.openCloseTopVisitedDialog.bind(this)
                 },
                 history: {
-                  onTouchTap: this.toggleHisrotyOpen.bind(this)
+                  onTouchTap: this.openHistoryDialog.bind(this)
                 },
                 permissions: {
                   onTouchTap: this.requestAllURLPermission
                 },
                 about: {
-                  onTouchTap: this.toggleAboutPanel.bind(this)
+                  onTouchTap: this.openCloseAboutPanel.bind(this)
                 }
               }
             }}
@@ -221,46 +216,35 @@ class App extends Component {
 
           <div style={styles.body_wrapper}>
 
-            {this.state.bookmarks_on && this.state.window.width >= 1000 ?
-              <div style={bookmarks_wrapper} className="bookmarks-bar">
-                <BookmarksList
-                  language={LANG}
-                  bookmarks={this.state.bookmarks.bookmarks_bar}
-                  actions={{
-                    delete: BookmarksProvider.delete
-                  }}
-                />
-              </div>
-              : null
-            }
-
-            {this.state.top_visited_on ?
-              <Tiles
-                status={{
-                  tiles: this.state.top_visited
+            <div style={bookmarks_wrapper} className="bookmarks-bar">
+              <BookmarksList
+                language={LANG}
+                bookmarks={this.state.bookmarks.bookmarks_bar}
+                actions={{
+                  delete: BookmarksProvider.delete
                 }}
+                visible={this.state.bookmarks_on && this.state.window.width >= 1000}
               />
-              : null
-            }
+            </div>
+
+            <Tiles
+              status={{
+                tiles: this.state.top_visited
+              }}
+              visible={this.state.top_visited_on}
+            />
 
           </div>
 
-
           <Wallpaper
-            status={{
-              visible: this.state.wallpaper_on
-            }}
+            visible={this.state.wallpaper_on}
             src={this.state.wallpaper_src}
             color={this.state.wallpaper_backgroung_color}
           />
 
           <History
-            status={{
-              open: this.state.history_open
-            }}
-            actions={{
-              open: this.toggleHisrotyOpen.bind(this)
-            }}
+            visible={this.state.history_open}
+            onRequestClose={this.openHistoryDialog.bind(this)}
             history={this.state.history}
           />
 
@@ -272,9 +256,10 @@ class App extends Component {
               main_switch_toggled: this.state.wallpaper_on,
               current_wallpaper: this.state.wallpaper_src
             }}
-            handleSettings={this.handleSettings.bind(this)}
+            handleSettings={this.handleSettingsFromChilds
+              .bind(this)}
             actions={{
-              open: this.toggleWallpaperSettings.bind(this)
+              open: this.openCloseWallpaperDialog.bind(this)
             }}
           />
 
@@ -285,8 +270,9 @@ class App extends Component {
               language: this.state.lang
             }}
             actions={{
-              open: this.toggleBookmarksSettings.bind(this),
-              handleSettings: this.handleSettings.bind(this)
+              open: this.openCloseBookmarksDialog.bind(this),
+              handleSettings: this.handleSettingsFromChilds
+                .bind(this)
             }}
           />
 
@@ -297,8 +283,9 @@ class App extends Component {
               language: this.state.lang
             }}
             actions={{
-              open: this.toggleTopVisitedSettings.bind(this),
-              handleSettings: this.handleSettings.bind(this)
+              open: this.openCloseTopVisitedDialog.bind(this),
+              handleSettings: this.handleSettingsFromChilds
+                .bind(this)
             }}
           />
 
@@ -307,7 +294,7 @@ class App extends Component {
               open: this.state.about_panel_modal_open
             }}
             actions={{
-              open: this.toggleAboutPanel.bind(this)
+              open: this.openCloseAboutPanel.bind(this)
             }}
             lang={LANG}
           />
