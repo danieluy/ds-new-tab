@@ -23,8 +23,12 @@ class App extends React.PureComponent {
     super();
     this.state = {
       lang: Language.getLang('en'),
-      wallpaper_src: DefaultWallpaper
     }
+  }
+  componentWillMount() {
+    this.setState({
+      wallpaper_src: DefaultWallpaper
+    })
   }
   render() {
     const LANG = this.state.lang;

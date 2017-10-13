@@ -6,6 +6,7 @@ import { blue500 } from 'material-ui/styles/colors';
 
 import { Wallpaper as WallpaperIcon } from '../assets/icons';
 
+
 class Wallpaper extends PureComponent {
   render() {
     if (this.props.visible && this.props.src) {
